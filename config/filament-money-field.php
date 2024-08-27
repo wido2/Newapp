@@ -11,7 +11,7 @@ return [
     | For example: en_US, en_GB, sv_SE, etc.
     |
     */
-    'default_locale' => env('MONEY_DEFAULT_LOCALE', 'en_US'),
+    'default_locale' => env('MONEY_DEFAULT_LOCALE', 'id_ID'),
 
     /*
     |---------------------------------------------------------------------------

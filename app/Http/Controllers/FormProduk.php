@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Filament\Forms\Components\Section;
 use Money\Money;
 use Illuminate\Http\Request;
 use Filament\Forms\Components\Select;
@@ -17,38 +18,46 @@ class FormProduk extends Controller
 {
     static function getFormProduk():array{
         return [
-            // Add form components for the produk form
-            TextInput::make('nama')
-            ->placeholder('Konsumable | Raw Material | Jasa ')
-            ->required(),
-            Select::make('satuan_id')
-            ->searchable()
-            ->createOptionForm(
-                FormSatuan::getFormSatuan()
-            )
-            ->editOptionForm(FormSatuan::getFormSatuan())
-            ->preload()
-            ->placeholder('Pilih Satuan Barang')
-            ->label('Satuan')
-            ->relationship('satuan','nama'),
-            Select::make('kategori_id')
-            ->placeholder('Pilih Kategori ')
-            ->searchable()
-            ->preload()
-            ->editOptionForm(FormKategori::getFormKategori())
-            ->createOptionForm(FormKategori::getFormKategori())
-            ->label('Kategori')
-            ->relationship('kategori','nama'),
-            TextInput::make('stok')
-            ->numeric()
-            ->default(1),
-            MoneyInput::make('harga_beli')
-            ->decimals(0),
-            Toggle::make('is_active')
-            ->default(true),
-            Textarea::make('deskripsi')
-            ->columnSpanFull(),
+            Section::make('Form Data Produks')
+            ->collapsible()
+            ->description('Detail Produk ')
+            ->columns(2)
+            ->schema([
+                TextInput::make('nama')
+                ->placeholder('Konsumable | Raw Material | Jasa ')
+                ->required(),
+                Select::make('satuan_id')
+                ->searchable()
+                ->createOptionForm(
+                    FormSatuan::getFormSatuan()
+                )
+                ->editOptionForm(FormSatuan::getFormSatuan())
+                ->preload()
+                ->placeholder('Pilih Satuan Barang')
+                ->label('Satuan')
+                ->relationship('satuan','nama'),
+                Select::make('kategori_id')
+                ->placeholder('Pilih Kategori ')
+                ->searchable()
+                ->preload()
+                ->editOptionForm(FormKategori::getFormKategori())
+                ->createOptionForm(FormKategori::getFormKategori())
+                ->label('Kategori')
+                ->relationship('kategori','nama'),
+                TextInput::make('stok')
+                ->numeric()
+                ->default(1),
+                MoneyInput::make('harga_beli')
+                ->decimals(0),
+                Toggle::make('is_active')
+                ->default(true),
+                Textarea::make('deskripsi')
+                ->columnSpanFull(),
+    
 
+            ]),
+            // Add form components for the produk form
+           
         ];
     }
 
@@ -62,6 +71,7 @@ class FormProduk extends Controller
                 ->searchable(),
             TextColumn::make('stok'),
             MoneyColumn::make('harga_beli')
+            ->currency('IDR')
                 ->sortable(),
             ToggleColumn::make('is_active')
                 ->label('Aktif')

@@ -11,6 +11,7 @@ class Produk extends Model
     protected $fillable = [
         'nama', 'satuan_id','kategori_id','deskripsi','stok','harga_beli','is_active'
     ];
+
     public function satuan()
     {
         return $this->belongsTo(Satuan::class);
@@ -24,6 +25,9 @@ class Produk extends Model
     {
         return $this->hasMany(Barang::class);
     }
-
+    public function harga_barang()
+    {
+        return $this->hasMany(HargaBarang::class);
+    }
 
 }

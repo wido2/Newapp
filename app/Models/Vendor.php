@@ -31,4 +31,8 @@ class Vendor extends Model
     {
         return $this->hasMany(SuratJalan::class);
     }
+    public function harga_barang()
+    {
+        return $this->hasMany(HargaBarang::class);
+    }
 }
