@@ -14,6 +14,8 @@ use Filament\Forms\Components\Fieldset;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
 use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
 use Pelmered\FilamentMoneyField\Tables\Columns\MoneyColumn;
 
@@ -84,16 +86,41 @@ class HargaBarangController extends Controller
                         // ->live()
                         ->default(date(now()))
                      ,
-                    TextInput::make('perubahan')
-                    ->numeric()
+                    MoneyInput::make('perubahan')
+                    // ->numeric()
+                    
                     ->live(onBlur:true)
                     ->prefix('Rp')
                     ->label('Perubahan Harga')
                     ->readOnly()
-                    ,
+                    ->prefixIconColor(
+                        function($state){
+                            if ($state>1){
+                                return 'danger';
+                            } elseif ($state<1){
+                                return 'success';
+                            } else {
+                                return 'info';
+                            }
+                        }
+                    )
+                    ->prefixIcon(
+                        function($state){
+                            if ($state>1){
+                                return 'heroicon-o-arrow-trending-up';
+                            } elseif ($state<1){
+                                return 'heroicon-o-arrow-trending-down';
+                            } else {
+                                return 'heroicon-o-check-circle';
+                            }
+                        }
+                    ),
                     TextInput::make('status_perubahan')
                     ->suffix('% ')
                     ->label('Status Perubahan %')->readOnly(),
+                    TextInput::make('keterangan')
+                    ->maxLength(255)
+                    ->columnSpanFull(),
                 ]),
         ];
     }
@@ -105,7 +132,15 @@ class HargaBarangController extends Controller
             TextColumn::make('vendor.nama')
             ->searchable(),
             TextColumn::make('tahun_kemarin')
-            ->sortable(),
+            ->sortable()
+            ->toggleable(
+                isToggledHiddenByDefault: true
+            ),
+            TextColumn::make('tahun_terbaru')
+            ->sortable()
+            ->toggleable(
+                isToggledHiddenByDefault: true
+            ),
             MoneyColumn::make('harga_kemarin')
             ->currency('idr')
             ->sortable(),
@@ -114,12 +149,64 @@ class HargaBarangController extends Controller
             ->sortable(),
             MoneyColumn::make('perubahan')
             ->currency('idr')
+            ->color(
+                function ($state){
+                    if ($state>1){
+                        return 'danger';
+                    } elseif ($state<1){
+                        return'success';
+                    } else {
+                        return 'info';
+                    }
+                }
+            )
+            ->icon(
+                function ($state ){
+                    if ($state>1){
+                        return 'heroicon-o-arrow-trending-up';
+                    }else
+                    if ($state<0){
+                        return 'heroicon-o-arrow-trending-down';
+                    }
+                }
+            )
             ->sortable(),
             TextColumn::make('status_perubahan')
             ->label('Change %')
             ->suffix('%')
             ->numeric()
+            ->color(
+                function ($state){
+                    if ($state>1){
+                        return 'danger';
+                    } elseif ($state<1){
+                        return'success';
+                    } else {
+                        return 'info';
+                    }
+                }
+            )
             ->sortable(),
+            TextColumn::make('keterangan')
+            ->limit(50)
+            ->toggleable(
+                isToggledHiddenByDefault: true
+            ),
+        ];
+    }
+    static function getFilterHargaBarang(): array{
+        return [
+            SelectFilter::make('produk_id')
+                ->label('Produk')
+                ->relationship('produk', 'nama')
+                ->preload()
+                ->searchable(),
+            SelectFilter::make('vendor_id')
+                ->label('Vendor')
+                ->relationship('vendor', 'nama')
+                ->preload()
+                ->searchable(),
+           
         ];
     }
 }

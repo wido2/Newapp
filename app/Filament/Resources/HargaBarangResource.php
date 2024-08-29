@@ -8,9 +8,11 @@ use App\Http\Controllers\ActionTable;
 use App\Http\Controllers\HargaBarangController;
 use App\Models\HargaBarang;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -33,9 +35,9 @@ class HargaBarangResource extends Resource
     {
         return $table
             ->columns(HargaBarangController::getTableHargaBarang())
-            ->filters([
-                //
-            ])
+            ->filters(
+                HargaBarangController::getFilterHargaBarang()
+            )
             ->actions(
                 ActionTable::getActionTable()
             )
