@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('produk_id')->nullable()->constrained('produks')->cascadeOnDelete();
             $table->foreignId('vendor_id')->nullable()->constrained('vendors')->cascadeOnDelete();
-            $table->decimal('harga_kemarin',12,0)->nullable();
-            $table->decimal('harga_terbaru',12,0)->nullable();
+            $table->decimal('harga_kemarin',14,0)->nullable();
+            $table->decimal('harga_terbaru',14,0)->nullable();
             $table->date('tahun_kemarin');
             $table->date('tahun_terbaru');
             $table->decimal('perubahan',12,2);

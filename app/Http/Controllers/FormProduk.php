@@ -47,8 +47,8 @@ class FormProduk extends Controller
                 TextInput::make('stok')
                 ->numeric()
                 ->default(1),
-                MoneyInput::make('harga_beli')
-                ->decimals(0),
+                TextInput::make('harga_beli')
+                ->numeric(          ),
                 Toggle::make('is_active')
                 ->default(true),
                 Textarea::make('deskripsi')
@@ -70,8 +70,8 @@ class FormProduk extends Controller
             TextColumn::make('kategori.nama')
                 ->searchable(),
             TextColumn::make('stok'),
-            MoneyColumn::make('harga_beli')
-            ->currency('IDR')
+            TextColumn::make('harga_beli')
+            ->money('idr')
                 ->sortable(),
             ToggleColumn::make('is_active')
                 ->label('Aktif')

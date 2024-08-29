@@ -4,6 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\HargaBarangResource\Pages;
 use App\Filament\Resources\HargaBarangResource\RelationManagers;
+use App\Http\Controllers\ActionTable;
 use App\Http\Controllers\HargaBarangController;
 use App\Models\HargaBarang;
 use Filament\Forms;
@@ -31,16 +32,13 @@ class HargaBarangResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
-            ->columns([
-                //
-            ])
+            ->columns(HargaBarangController::getTableHargaBarang())
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-            ])
+            ->actions(
+                ActionTable::getActionTable()
+            )
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
