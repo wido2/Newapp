@@ -141,14 +141,19 @@ class HargaBarangController extends Controller
             ->toggleable(
                 isToggledHiddenByDefault: true
             ),
-            MoneyColumn::make('harga_kemarin')
-            ->currency('idr')
+            TextColumn::make('harga_kemarin')
+            // ->currency('idr')
+            ->money('idr',0,'id')
             ->sortable(),
-            MoneyColumn::make('harga_terbaru')
-            ->currency('idr')
+            TextColumn::make('harga_terbaru')
+            // ->currency('idr')
+            ->money('idr',0,'id')
+
             ->sortable(),
-            MoneyColumn::make('perubahan')
-            ->currency('idr')
+            TextColumn  ::make('perubahan')
+            // ->currency('idr')
+            ->money('idr',0,'id')
+
             ->color(
                 function ($state){
                     if ($state>1){

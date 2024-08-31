@@ -10,6 +10,7 @@ use Filament\Forms\Set;
 use App\Models\Kendaraan;
 use Illuminate\Http\Request;
 use App\Livewire\ViewKendaraans;
+use App\Models\Produk;
 use Filament\Infolists\Infolist;
 use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Tabs;
@@ -98,22 +99,20 @@ class SuratJalan extends Controller
                             )
                         ->label('Penerima'),
                         Select::make('address')
-                        ->hidden(fn (Get $get):bool =>! $get('kontak_id'))
+                        // ->relationship('address','street')
+                        ->hidden(fn (Get $get):bool =>!  $get('customer_id'))
                         ->columnSpanFull()
-                        ->searchable()
+                        ->searchable()   
                         ->preload()
+                        ->getSearchResultsUsing(fn (Get $get):array=>
+                        Address::where('customer_id','like',$get ('customer_id'))
+                        ->where('address_type','=','Warehouse')
+                           ->pluck('street','street')
+                            ->toArray())
                         ->required()
                         ->placeholder('Pilih Customer terlebih dahulu')
-                        ->relationship(
-                            'address', 'street',
-                        fn(Builder $query, Get $get) =>
-                            $query->where('customer_id', $get('customer_id'))
-                            ->where('address_type', 'Warehouse')
-                            )
                         ->label('Alamat Penerima')
-                        ->createOptionForm(
-                            FormAddress::getFormAddress()
-                        )
+                      
                     ]),
 
                 Step::make('Detail')
@@ -490,19 +489,40 @@ class SuratJalan extends Controller
                             ->relationship()
                             ->schema([
                                 Select::make('produk_id')
-                                ->required()->searchable()
+                                ->required()
+                                ->searchable()
                                 ->preload()
+                                ->createOptionForm(
+                                    FormProduk::getFormProduk()
+                                )
+                                ->editOptionForm(
+                                    FormProduk::getFormProduk()
+                                )
+                                
+                                
                                 ->relationship('produk', 'nama')
                                 ->columnSpan(3),
                                 TextInput::make('qty')
                                     ->columnSpan(1)
+                                ->live(onBlur:true)
+                                    ->afterStateUpdated(
+                                        function(Get $get,Set $set){
+                                            
+                                            $getsatuan=Produk::where('id','=',$get('produk_id'))->first();
+                                            $set('satuan_id',$getsatuan->satuan_id);
+                                            if($get('produk_id')==null){
+                                                return'';
+                                            }
+                                        }
+                                    )
                                     ->numeric()
                                     ->default(1)
                                     ->required(),
                                 Select::make('satuan_id')
                                     ->required()
                                     ->placeholder('satuan')
-                                    ->searchable()->preload()
+                                    ->preload()
+                                    ->searchable()          
                                     ->relationship('satuan', 'nama')
                                     ->columnSpan(1),
                                 TextInput::make('deskripsi')
@@ -512,13 +532,21 @@ class SuratJalan extends Controller
 
                     ]),
             ])
-                ->startOnStep(5)
+                // ->startOnStep(5)
                 ->columnSpanFull(),
         ];
     }
 
     static function getTableSuratJalan(): array
     {
-        return [TextColumn::make('nomor_surat_jalan')->searchable()->sortable(), TextColumn::make('customer.nama')->searchable()->sortable(), TextColumn::make('kontak.nama')->searchable()->sortable(), TextColumn::make('address')->searchable()->limit(50)->sortable(), TextColumn::make('user.name')->searchable()->sortable(), TextColumn::make('tanggal_pengiriman')->sortable(), TextColumn::make('kendaraan.nomor_polisi')->searchable()->sortable(), ImageColumn::make('scan_surat')->circular()->stacked()->limit(3)->limitedRemainingText(), ImageColumn::make('lampiran')->circular()->limit()->limitedRemainingText()->stacked()];
+        return [
+            TextColumn::make('nomor_surat_jalan')->searchable()->sortable(), 
+            TextColumn::make('customer.nama')->searchable()->sortable(), 
+            TextColumn::make('kontak.nama')->searchable()->sortable(), 
+            TextColumn::make('address')->searchable()->limit(50)->sortable(), 
+            TextColumn::make('user.name')->searchable()->sortable(), 
+            TextColumn::make('tanggal_pengiriman')->sortable(), 
+            TextColumn::make('kendaraan.nomor_polisi')->searchable()->sortable(), 
+            ImageColumn::make('scan_surat')->circular()->stacked()->limit(3)->limitedRemainingText(), ImageColumn::make('lampiran')->circular()->limit()->limitedRemainingText()->stacked()];
     }
 }

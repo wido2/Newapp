@@ -21,14 +21,14 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        filament::serving(
-            function(){
-                Filament::registerNavigationGroups([
-                    'Surat Jalan',
-                    'Data Customer / Vendor',
-                    'Data Barang'
-                ]);
-            }
-        );
+    //     filament::serving(
+    //         function(){
+    //             Filament::registerNavigationGroups([
+    //                 'Surat Jalan',
+    //                 'Data Customer / Vendor',
+    //                 'Data Barang'
+    //             ]);
+    //         }
+    //     );
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Providers\Filament;
 
+use EightyNine\Reports\ReportsPlugin;
 use Filament\FontProviders\GoogleFontProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -44,6 +45,9 @@ class LoginPanelProvider extends PanelProvider
             ->widgets([
                 Widgets\AccountWidget::class,
                 Widgets\FilamentInfoWidget::class,
+            ])
+            ->plugins([
+                ReportsPlugin::make()
             ])
             ->middleware([
                 EncryptCookies::class,
