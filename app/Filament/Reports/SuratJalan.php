@@ -90,7 +90,6 @@ class SuratJalan extends Report
                 ->preload()
                 ->options(
                     ModelsSuratJalan::all()
-                    ->take(5)
                     ->pluck('nomor_surat_jalan', 'id')
                     ->toArray()
 
