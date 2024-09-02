@@ -34,11 +34,13 @@ class BarangsRelationManager extends RelationManager
                 ->searchable()
                 ->sortable()
                 ,
+                TextColumn::make('qty')
+                ->sortable(),
+                TextColumn::make('satuan.nama')
+                ->searchable(),
                 TextColumn::make('deskripsi')
                 ->searchable()
                 ->limit(80),
-                TextColumn::make('satuan.nama')
-                ->searchable(),
 
             ])
             ->filters([

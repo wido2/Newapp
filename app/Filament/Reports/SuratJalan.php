@@ -43,44 +43,34 @@ class SuratJalan extends Report
                 )
                 ->columns([
                     TextColumn::make('produk_nama')
-                    // ->size('small')
+                    ->label('Nama Barang')
                     ->weight('Thin')
-                    ->wrap(true)
-                    ->columnSpan(3),
+                    ->wrap(true),
                     TextColumn::make('qty')
                     ->size('small'),
                     TextColumn::make('satuan_nama')
                     ->label('Satuan'),
                     TextColumn::make('deskripsi')
                     ->label('keterangan'),
-                    // TextColumn::make('tanggal_surat_jalan'),
-                    // TextColumn::make('produk_stok'),
-                    // TextColumn::make('produk_deskripsi'),
-                    //...
                 ])
-                // ...
             ]);
     }
     private function getData(?array $filters): Collection
     {
-        return         Barang::query()
+        return
+        Barang::query()
         ->where('surat_jalan_id','=',$filters)
+        ->with('produk')
+        ->with('satuan')
         ->get()
-        ->map(function ($item){
-            $produk=Produk::find($item->produk_id);
-            return [
-                'nomor_surat_jalan' => $item->nomor_surat_jalan,
-                'produk_nama' => $produk->nama,
-                'qty'=>$item->qty,
-                'deskripsi' => $item->deskripsi,
-                'tanggal_surat_jalan' => $item->tanggal_surat_jalan,
-                'satuan_nama' => $item->satuan->nama,
-                'produk_stok' => $produk->stok,
-                'produk_deskripsi' => $produk->deskripsi,
-
-                //...
-            ];
-        });
+        ->map(function($item){
+            $item->produk_nama=$item->produk->nama;
+            $item->satuan_nama=$item->satuan->nama;
+            return $item;
+        })
+            
+        ;
+        
     }
 
     public function footer(Footer $footer): Footer
@@ -96,11 +86,17 @@ class SuratJalan extends Report
         return $form
             ->schema([
                 Select::make('nomor_surat_jalan')
+                ->searchable()
+                ->preload()
                 ->options(
                     ModelsSuratJalan::all()
-                    ->pluck('nomor_surat_jalan', 'nomor_surat_jalan')
+                    ->take(5)
+                    ->pluck('nomor_surat_jalan', 'id')
+                    ->toArray()
+
                 )
-                // ->relationship()
+                ->label('Nomor Surat Jalan')
+
             ]);
     }
 }
