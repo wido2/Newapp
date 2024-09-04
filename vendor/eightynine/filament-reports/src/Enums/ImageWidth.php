@@ -18,4 +18,6 @@ enum ImageWidth: string
     case Xl7 = 'max-width: 150px';
     case Xl8 = 'max-width: 160px';
     case Xl9 = 'max-width: 170px';
+    case x512 = 'max-width: 512px';
+    case x400 = 'max-width: 400px';
 }

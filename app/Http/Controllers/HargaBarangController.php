@@ -14,6 +14,7 @@ use Filament\Forms\Components\Fieldset;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
 use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
@@ -74,10 +75,9 @@ class HargaBarangController extends Controller
                     )
                     ->afterStateUpdated(
                         function(Set $set,Get $get){
-                            $a=$get('harga_kemarin');
-                            $b=$get('harga_terbaru');
-                            $perubahanharga=($b-$a)/$a*100;
-                            $set('status_perubahan',round($perubahanharga,2));
+                           if($get('harga_kemarin')>1){
+                            $set('status_perubahan',round(($get('harga_terbaru')-$get('harga_kemarin'))/$get('harga_kemarin')*100));
+                           }
                         }
                     )
                     ,
@@ -116,8 +116,21 @@ class HargaBarangController extends Controller
                         }
                     ),
                     TextInput::make('status_perubahan')
-                    ->suffix('% ')
-                    ->label('Status Perubahan %')->readOnly(),
+                    ->suffixIcon('heroicon-o-percent-badge')
+                    ->suffixIconColor(
+                        function($state){
+                            if ($state>60){
+                                return 'danger';
+                            } elseif ($state<10){
+                                return 'success';
+                            } else {
+                                return 'info';
+                            }
+                        }
+                    )
+                    ->label('Status Perubahan %')
+                    ->readOnly(),
+                    
                     TextInput::make('keterangan')
                     ->maxLength(255)
                     ->columnSpanFull(),

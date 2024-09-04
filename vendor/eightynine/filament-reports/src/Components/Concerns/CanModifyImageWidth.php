@@ -117,4 +117,16 @@ trait CanModifyImageWidth
 
         return $this;
     }
+    public function widthX512(): static
+    {
+        $this->imageWidth = ImageWidth::x512;
+
+        return $this;
+    }
+    public function widthX400(): static
+    {
+        $this->imageWidth = ImageWidth::x400;
+
+        return $this;
+    }
 }

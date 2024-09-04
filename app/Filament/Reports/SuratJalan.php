@@ -18,8 +18,10 @@ use EightyNine\Reports\Components\Header;
 use EightyNine\Reports\Components\Body\Table;
 use App\Models\SuratJalan as ModelsSuratJalan;
 use EightyNine\Reports\Components\Body\TextColumn;
+use EightyNine\Reports\Components\Footer\Layout\FooterRow;
 use EightyNine\Reports\Components\Header\Layout\HeaderRow;
 use EightyNine\Reports\Components\Header\Layout\HeaderColumn;
+use EightyNine\Reports\Enums\FontSize;
 
 class SuratJalan extends Report
 {
@@ -29,36 +31,42 @@ class SuratJalan extends Report
 
     public function header(Header $header): Header
     {
-      $k=Auth::user();
-        $imgpath='/public/storage/logo.png';
+        
+        $k=Auth::user();
         return $header
             ->schema([
                 HeaderRow::make()
                 ->schema([
 
-               HeaderColumn::make()
-               ->schema([
+                    HeaderColumn::make()
+                    ->schema([
                     Image::make('/storage/logo.png')
-                    ->width2Xl()
-                    ,
-                    Text::make('Report Surat Jalan')
-                        // ->size('large')
-                        // ->weight('bold')
-                        ->color('primary'),
-                    Text::make('Tanggal : '.date('d-m-Y'))
-                        // ->size('small')
-                    // ->weight('thin')     
-                ])->alignLeft(),
-                HeaderColumn::make()
-                ->schema([
-                    Text::make('Dibuat Oleh : '. $k->name)
-                        // ->size('small')
-                        // ->weight('thin')
-                        ,
-                    // Text::make('Dibuat Tanggal : '.date('d-m-Y H:i:s'))
-                ])->alignRight()
-                ])
+                    ->widthX400(),     
+                    ])->alignLeft(),
+                    HeaderColumn::make()
+                    ->schema([
+                        
+                    ]),
 
+                    HeaderColumn::make()
+                    ->schema([
+                        Text::make('Sidoarjo, '.'Tanggal , '.date('d-m-Y')),
+                        // Text::make('No. SJ : '.$customerName->nomor_surat_jalan),
+                        // Text::make('Penerima : '.$customerName->customer->nama),
+                        // Text::make('Alamat : '.$customerName->address),
+                        // Text::make('Kontak : '.$customerName->kontak->nama),
+                        // Text::make(dd($form))
+
+                    ])->alignRight()
+                    ]),
+                
+                HeaderRow::make()
+                ->schema(
+                    [
+                        Text::make('Surat Jalan')
+                        ->font3Xl()
+                    ]
+                )->alignCenter()
             ]);
 
     }
@@ -70,6 +78,7 @@ class SuratJalan extends Report
 
         return $body
             ->schema([
+                
                 Table::make()
                 ->data(
                     fn (?array $filters)=>$this->getData($filters)
@@ -88,17 +97,22 @@ class SuratJalan extends Report
                 ])
             ]);
     }
-    private function getData(?array $filters): Collection
+    public function getData(?array $filters): Collection
     {
+        // $data = $this->getData(['nomor_surat_jalan' => $this->filters['nomor_surat_jalan']]);
+
         return
         Barang::query()
         ->where('surat_jalan_id','=',$filters)
         ->with('produk')
         ->with('satuan')
+        // ->with('suratJalan')
         ->get()
         ->map(function($item){
             $item->produk_nama=$item->produk->nama;
             $item->satuan_nama=$item->satuan->nama;
+            // $item->customer_nama=$item->suratJalan->customer->nama; // Access the customer's name
+
             return $item;
         })
             
@@ -110,10 +124,14 @@ class SuratJalan extends Report
     {
         return $footer
             ->schema([
-                // ...
+                FooterRow::make()
+                ->schema([
+
+                ])
             ]);
     }
 
+    
     public function filterForm(Form $form): Form
     {
         return $form

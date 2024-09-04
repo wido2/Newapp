@@ -24,5 +24,9 @@ class Customer extends Model
     {
         return $this->hasMany(Project::class);
     }
+    public function surat_jalan()
+    {
+        return $this->hasMany(SuratJalan::class);
+    }
 
 }
