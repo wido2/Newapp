@@ -65,7 +65,7 @@ public static function infolist(Infolist $infolist): Infolist
             ->filters([
                 //
             ])
-            ->actions(ActionTable::getActionTable())
+            ->actions(ActionTable::getActionTablewithDownload())
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),

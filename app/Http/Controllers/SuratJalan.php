@@ -547,6 +547,6 @@ class SuratJalan extends Controller
             TextColumn::make('user.name')->searchable()->sortable(), 
             TextColumn::make('tanggal_pengiriman')->sortable(), 
             TextColumn::make('kendaraan.nomor_polisi')->searchable()->sortable(), 
-            ImageColumn::make('scan_surat')->circular()->stacked()->limit(3)->limitedRemainingText(), ImageColumn::make('lampiran')->circular()->limit()->limitedRemainingText()->stacked()];
+            ImageColumn::make('scan_surat')->toggleable(isToggledHiddenByDefault:true)->circular()->stacked()->limit(3)->limitedRemainingText(), ImageColumn::make('lampiran')->circular()->limit()->limitedRemainingText()->stacked()];
     }
 }
