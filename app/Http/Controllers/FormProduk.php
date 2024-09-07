@@ -48,7 +48,7 @@ class FormProduk extends Controller
                 ->numeric()
                 ->default(1),
                 TextInput::make('harga_beli')
-                ->numeric(          ),
+                ->numeric(),
                 Toggle::make('is_active')
                 ->default(true),
                 Textarea::make('deskripsi')

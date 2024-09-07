@@ -6,7 +6,9 @@ use App\Models\Produk;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use App\Models\HargaBarang;
+use Filament\Forms\Components\Builder;
 use Illuminate\Http\Request;
+use Filament\Tables\Filters\Filter;
 use Filament\Forms\Components\Split;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Section;
@@ -14,11 +16,13 @@ use Filament\Forms\Components\Fieldset;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
-use Filament\Infolists\Components\TextEntry;
-use Filament\Tables\Filters\Filter;
 use Filament\Tables\Filters\SelectFilter;
-use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Tables\Columns\Summarizers\Range;
+use Filament\Tables\Columns\Summarizers\Average;
+use Filament\Tables\Columns\Summarizers\Count;
 use Pelmered\FilamentMoneyField\Tables\Columns\MoneyColumn;
+use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
 
 class HargaBarangController extends Controller
 {
@@ -48,6 +52,19 @@ class HargaBarangController extends Controller
                                 $set('harga_kemarin', $a->harga_beli);
                             }
                         })
+                        ->afterStateUpdated(
+                            function(Set $set,Get $get){
+                                $tahunkemarin =HargaBarang::where('vendor_id',$get('vendor_id'))
+                                ->where('produk_id',$get('produk_id'))
+                                ->orderBy('tahun_kemarin','desc')
+                                ->first();
+                            if($tahunkemarin){
+                                $set('tahun_kemarin',$tahunkemarin->tahun_terbaru);
+                            }else{
+                                $set('tahun_kemarin',date('Y'));
+                            }
+                            }
+                        )
 
                         ->editOptionForm(VendorController::getFormVendor())
                         ->createOptionForm(VendorController::getFormVendor())
@@ -57,9 +74,9 @@ class HargaBarangController extends Controller
                         ->prefix('Rp')
                         ->readOnly(),
                     DatePicker::make('tahun_kemarin')
-                        ->default(function (Get $get): string {
-                            return HargaBarang::where('produk_id', $get('produk_id'))->where('vendor_id', $get('vendor_id'))->orderBy('created_at', 'desc')->first()->tahun_kemarin ?? date('Y');
-                        })
+                        // ->default(function (Get $get): string {
+                        //     return HargaBarang::where('produk_id', $get('produk_id'))->where('vendor_id', $get('vendor_id'))->orderBy('tahun_kemarin', 'desc')->first() ?? date('Y');
+                        // })
                         ->label('Tahun Kemarin'),
 
                     TextInput::make('harga_terbaru')->numeric()->prefix('Rp')// ->live()
@@ -86,8 +103,8 @@ class HargaBarangController extends Controller
                         // ->live()
                         ->default(date(now()))
                      ,
-                    MoneyInput::make('perubahan')
-                    // ->numeric()
+                    TextInput::make('perubahan')
+                    ->numeric()
                     
                     ->live(onBlur:true)
                     ->prefix('Rp')
@@ -221,6 +238,7 @@ class HargaBarangController extends Controller
             ->wrap()
             ->label('Produk'),
             TextColumn::make('vendor.nama')
+            ->toggleable(isToggledHiddenByDefault:true)
             ->searchable(),
             TextColumn::make('tahun_kemarin')
             ->sortable()
@@ -229,6 +247,7 @@ class HargaBarangController extends Controller
             ),
             TextColumn::make('tahun_terbaru')
             ->sortable()
+            ->summarize(Count::make()->label('Kenaikan Sebanyak')->suffix(' X'))
             ->toggleable(
                 isToggledHiddenByDefault: false
             ),
@@ -240,12 +259,22 @@ class HargaBarangController extends Controller
             TextColumn::make('harga_terbaru')
             // ->currency('idr')
             ->money('idr',0,'id')
+            ->summarize(
+                Range::make()
+                // ->prefix('Rp.')
+                ->label('Range Harga ')
 
+            )
+            
             ->sortable(),
             TextColumn  ::make('perubahan')
             // ->currency('idr')
+            ->summarize(
+                Average::make()
+                ->prefix('Rp.')
+                // ->label('Range Perubahan Harga ')
+            )
             ->money('idr',0,'id')
-
             ->color(
                 function ($state){
                     if ($state>1){
@@ -272,6 +301,8 @@ class HargaBarangController extends Controller
             ->label('Change %')
             ->suffix('%')
             ->numeric()
+            // ->summarize(Range::make()
+            //     ->label('Rata'))
             ->color(
                 function ($state){
                     if ($state>1){
@@ -283,6 +314,9 @@ class HargaBarangController extends Controller
                     }
                 }
             )
+            ->summarize(Average::make()
+            ->suffix(' %'))
+            
             ->sortable(),
             TextColumn::make('keterangan')
             ->limit(50)

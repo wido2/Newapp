@@ -40,13 +40,18 @@ class HargaBarangResource extends Resource
         ->defaultGroup('vendor.nama')   
         ->groups([
             Group::make('vendor.nama')
+            
+            // ->groupQueryUsing('')
+            // ->groupQuery()
+            
             ->collapsible()               
-             ->orderQueryUsing(fn (Builder $query, string $direction) => $query->orderBy('tahun_terbaru', $direction)->orderBy('id',$direction))
+             ->orderQueryUsing(fn (Builder $query, string $direction) => $query->orderBy('tahun_terbaru', 'desc')->orderBy('id',$direction))
 
             ->label('Vendor')
             // ->getTitleFromRecordUsing('vendor.nama')
         ])
-            ->columns(HargaBarangController::getTableHargaBarang())
+            ->columns(HargaBarangController::getTableHargaBarang()
+            )
             ->filters(
                 HargaBarangController::getFilterHargaBarang()
             )
