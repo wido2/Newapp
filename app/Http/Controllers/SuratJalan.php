@@ -31,12 +31,16 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Infolists\Components\TextEntry;
 use App\Models\SuratJalan as ModelsSuratJalan;
+use Awcodes\TableRepeater\Components\TableRepeater;
+use Awcodes\TableRepeater\Header;
+use Filament\Forms\Components\Textarea;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Contracts\HasInfolists;
 use Illuminate\Support\Carbon as SupportCarbon;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Filament\Infolists\Concerns\InteractsWithInfolists;
+use Filament\Support\Enums\Alignment;
 
 class SuratJalan extends Controller
 {
@@ -483,56 +487,121 @@ class SuratJalan extends Controller
                 Step::make('Barang')
                     ->icon('heroicon-o-squares-plus')
                     ->description('Items')
+                    ->columnSpanFull()
                     ->schema([
-                        Repeater::make('barangs')
-                            ->columns(8)
-                            ->relationship()
-                            ->schema([
-                                Select::make('produk_id')
+                        // Repeater::make('barangs')
+                        
+                        //     ->columns(8)
+                        //     ->relationship()
+                        //     ->schema([
+                        //         Select::make('produk_id')
+                        //         ->required()
+                        //         ->searchable()
+                        //         ->preload()
+                        //         ->createOptionForm(
+                        //             FormProduk::getFormProduk()
+                        //         )
+                        //         ->editOptionForm(
+                        //             FormProduk::getFormProduk()
+                        //         )
+                                
+                                
+                        //         ->relationship('produk', 'nama')
+                        //         ->columnSpan(3),
+                        //         TextInput::make('qty')
+                        //             ->columnSpan(1)
+                        //         ->live(onBlur:true)
+                        //             ->afterStateUpdated(
+                        //                 function(Get $get,Set $set){
+                                            
+                        //                     $getsatuan=Produk::where('id','=',$get('produk_id'))->first();
+                        //                     $set('satuan_id',$getsatuan->satuan_id);
+                        //                     if($get('produk_id')==null){
+                        //                         return'';
+                        //                     }
+                        //                 }
+                        //             )
+                        //             ->numeric()
+                        //             ->default(1)
+                        //             ->required(),
+                        //         Select::make('satuan_id')
+                        //             ->required()
+                        //             ->placeholder('satuan')
+                        //             ->preload()
+                        //             ->searchable()          
+                        //             ->relationship('satuan', 'nama')
+                        //             ->columnSpan(1),
+                        //         TextInput::make('deskripsi')
+                        //             ->columnSpan(3)
+                        //         ])
+
+                        TableRepeater::make('barangs')
+                        ->columnSpanFull()
+                        ->reorderable(true)
+                        ->cloneable()
+                        ->label('Detail Barang')
+                        ->relationship()
+                        ->headers([
+                            Header::make('produk_id')
+                            // ->align(Alignment::Center)
+                            ->label('Nama Barang')
+                            ->width('500px'),
+                            Header::make('qty')
+                            ->align(Alignment::Center)
+                            ->label('Jumlah')
+                            ->width('90px'),
+                            Header::make('satuan_id')
+                            ->align(Alignment::Center)
+                            ->label('Satuan'),
+                            Header::make('deskripsi')
+                            ->label('Keterangan')
+                            ->align(Alignment::Center)
+
+                        ])
+                        ->schema([
+                            Select::make('produk_id')
                                 ->required()
                                 ->searchable()
                                 ->preload()
+                                ->relationship('produk','nama')
                                 ->createOptionForm(
                                     FormProduk::getFormProduk()
                                 )
                                 ->editOptionForm(
                                     FormProduk::getFormProduk()
                                 )
-                                
-                                
-                                ->relationship('produk', 'nama')
-                                ->columnSpan(3),
-                                TextInput::make('qty')
-                                    ->columnSpan(1)
+                               ,
+                            TextInput::make('qty')
+                                // ->columnSpan(1)
                                 ->live(onBlur:true)
-                                    ->afterStateUpdated(
-                                        function(Get $get,Set $set){
-                                            
-                                            $getsatuan=Produk::where('id','=',$get('produk_id'))->first();
-                                            $set('satuan_id',$getsatuan->satuan_id);
-                                            if($get('produk_id')==null){
-                                                return'';
+                                ->afterStateUpdated(
+                                function(Get $get,Set $set){
+                                        $getsatuan=Produk::where('id','=',$get('produk_id'))->first();
+                                        $set('satuan_id',$getsatuan->satuan_id);
+                                        if($get('produk_id')==null){
+                                        return'';
+                                              }
                                             }
-                                        }
-                                    )
-                                    ->numeric()
-                                    ->default(1)
-                                    ->required(),
-                                Select::make('satuan_id')
-                                    ->required()
-                                    ->placeholder('satuan')
-                                    ->preload()
-                                    ->searchable()          
-                                    ->relationship('satuan', 'nama')
-                                    ->columnSpan(1),
-                                TextInput::make('deskripsi')
-                                    ->columnSpan(3)
-                                ])
-
+                                        )
+                                ->numeric()
+                                ->default(1)
+                                ->required()
+                                ,
+                            Select::make('satuan_id')
+                                ->required()
+                                ->placeholder('satuan')
+                                ->preload()
+                                ->searchable()          
+                                ->relationship('satuan', 'nama')
+                                ,
+                            Textarea::make('deskripsi')
+                            ->rows(1)
+                                
+                        ])
 
                     ]),
             ])
-                // ->startOnStep(5)
+                ->startOnStep(5)
                 ->columnSpanFull(),
         ];
     }
@@ -544,7 +613,7 @@ class SuratJalan extends Controller
             TextColumn::make('customer.nama')->searchable()->sortable(), 
             TextColumn::make('kontak.nama')->searchable()->sortable(), 
             TextColumn::make('address')->searchable()->limit(50)->sortable(), 
-            TextColumn::make('user.name')->searchable()->sortable(), 
+            TextColumn::make('user.name')->toggleable(isToggledHiddenByDefault:true)->sortable(), 
             TextColumn::make('tanggal_pengiriman')->sortable(), 
             TextColumn::make('kendaraan.nomor_polisi')->searchable()->sortable(), 
             ImageColumn::make('scan_surat')->toggleable(isToggledHiddenByDefault:true)->circular()->stacked()->limit(3)->limitedRemainingText(), ImageColumn::make('lampiran')->circular()->limit()->limitedRemainingText()->stacked()];
