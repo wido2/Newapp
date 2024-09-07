@@ -25,6 +25,7 @@ class LoginPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+            ->topNavigation()
             ->default()
             ->sidebarCollapsibleOnDesktop()
             ->id('login')
