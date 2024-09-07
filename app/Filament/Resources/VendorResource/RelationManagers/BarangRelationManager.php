@@ -1,46 +1,40 @@
 <?php
 
-namespace App\Filament\Resources\CustomerResource\RelationManagers;
+namespace App\Filament\Resources\VendorResource\RelationManagers;
 
+use App\Http\Controllers\HargaBarangController;
 use Filament\Forms;
-use Filament\Tables;
 use Filament\Forms\Form;
+use Filament\Resources\RelationManagers\RelationManager;
+use Filament\Tables;
 use Filament\Tables\Table;
-use App\Http\Controllers\FormAddress;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Resources\RelationManagers\RelationManager;
 
-class AddressRelationManager extends RelationManager
+class BarangRelationManager extends RelationManager
 {
-    protected static string $relationship = 'address';
-    protected static ?string $badge = 'new';
-    public static function getBadge(Model $ownerRecord, string $pageClass): ?string
-    {   $count=$ownerRecord->address->count();
-        return $count>0?$count:null;
-    }
+    protected static string $relationship = 'harga_barang';
 
     public function form(Form $form): Form
     {
         return $form
             ->schema(
-                FormAddress::getFormAddress()
+                HargaBarangController::getFormHargaBarang()
             );
     }
 
     public function table(Table $table): Table
     {
         return $table
-            ->recordTitleAttribute('customer_id')
+            ->recordTitleAttribute('produk_id')
             ->columns(
-                FormAddress::getTableAddress()
+                HargaBarangController::getTableHargaBarangonVendorResource()
             )
             ->filters([
                 //
             ])
             ->headerActions([
-                // Tables\Actions\CreateAction::make(),
+                Tables\Actions\CreateAction::make(),
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),

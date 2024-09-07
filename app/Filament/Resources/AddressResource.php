@@ -8,6 +8,7 @@ use App\Models\Address;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use Filament\Tables\Grouping\Group;
 use App\Http\Controllers\FormAddress;
 use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\AddressResource\Pages;
@@ -35,6 +36,16 @@ class AddressResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+        ->defaultGroup('customer.nama')
+        ->defaultSort('customer_id', 'desc')
+        ->groups([
+            Group::make('customer.nama')
+            ->collapsible()               
+             ->orderQueryUsing(fn (Builder $query, string $direction) => $query->orderBy('is_primary', $direction))
+
+            ->label('Customer')
+            // ->getTitleFromRecordUsing('customer.nama')
+        ])
             ->columns(
                 FormAddress::getTableAddress()
             )

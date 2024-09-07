@@ -137,10 +137,88 @@ class HargaBarangController extends Controller
                 ]),
         ];
     }
+    static function getTableHargaBarangonVendorResource(): array {
+        return [
+            TextColumn::make('produk.nama')
+            ->searchable()
+            // ->limit(70)
+            ->wrap(true)
+            // ->size(2)
+            // ->width(500)
+            ->label('Produk'),
+            // TextColumn::make('tahun_kemarin')
+            // ->sortable()
+            // ->toggleable(
+            //     isToggledHiddenByDefault: false
+            // ),
+            TextColumn::make('tahun_terbaru')
+            ->sortable()
+            ->toggleable(
+                isToggledHiddenByDefault: false
+            ),
+            // TextColumn::make('harga_kemarin')
+            // // ->currency('idr')
+            // ->money('idr',0,'id')
+            // ->sortable(),
+            TextColumn::make('harga_terbaru')
+            // ->currency('idr')
+            ->money('idr',0,'id')
+
+            ->sortable(),
+            TextColumn  ::make('perubahan')
+            // ->currency('idr')
+            ->money('idr',0,'id')
+
+            ->color(
+                function ($state){
+                    if ($state>1){
+                        return 'danger';
+                    } elseif ($state<1){
+                        return'success';
+                    } else {
+                        return 'info';
+                    }
+                }
+            )
+            ->icon(
+                function ($state ){
+                    if ($state>1){
+                        return 'heroicon-o-arrow-trending-up';
+                    }else
+                    if ($state<0){
+                        return 'heroicon-o-arrow-trending-down';
+                    }
+                }
+            )
+            ->sortable(),
+            TextColumn::make('status_perubahan')
+            ->label('Change %')
+            ->suffix('%')
+            ->numeric()
+            ->color(
+                function ($state){
+                    if ($state>1){
+                        return 'danger';
+                    } elseif ($state<1){
+                        return'success';
+                    } else {
+                        return 'info';
+                    }
+                }
+            )
+            ->sortable(),
+            TextColumn::make('keterangan')
+            ->limit(50)
+            ->toggleable(
+                isToggledHiddenByDefault: true
+            ),
+        ];
+    }
     static function getTableHargaBarang(): array {
         return [
             TextColumn::make('produk.nama')
             ->searchable()
+            ->wrap()
             ->label('Produk'),
             TextColumn::make('vendor.nama')
             ->searchable(),
@@ -152,10 +230,11 @@ class HargaBarangController extends Controller
             TextColumn::make('tahun_terbaru')
             ->sortable()
             ->toggleable(
-                isToggledHiddenByDefault: true
+                isToggledHiddenByDefault: false
             ),
             TextColumn::make('harga_kemarin')
             // ->currency('idr')
+            ->toggleable(isToggledHiddenByDefault:true)
             ->money('idr',0,'id')
             ->sortable(),
             TextColumn::make('harga_terbaru')

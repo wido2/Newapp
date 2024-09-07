@@ -20,6 +20,7 @@ use App\Filament\Resources\CustomerResource\RelationManagers;
 use App\Filament\Resources\CustomerResource\RelationManagers\AddressRelationManager;
 use App\Filament\Resources\CustomerResource\RelationManagers\KontakRelationManager;
 use App\Filament\Resources\CustomerResource\RelationManagers\ProjectRelationManager;
+use App\Filament\Resources\CustomerResource\RelationManagers\SuratjalanRelationManager;
 
 class CustomerResource extends Resource
 {
@@ -71,7 +72,8 @@ class CustomerResource extends Resource
         return [
             KontakRelationManager::class,
             AddressRelationManager::class,
-            ProjectRelationManager::class
+            ProjectRelationManager::class,
+            SuratjalanRelationManager::class
         ];
     }
 

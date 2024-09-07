@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources;
 
+use App\Filament\Resources\KendaraanResource\RelationManagers\SuratJalanRelationManager;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Vendor;
@@ -14,6 +15,7 @@ use App\Http\Controllers\VendorController;
 use App\Filament\Resources\VendorResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\VendorResource\RelationManagers;
+use App\Filament\Resources\VendorResource\RelationManagers\BarangRelationManager;
 use App\Filament\Resources\VendorResource\RelationManagers\KendaraanRelationManager;
 use App\Filament\Resources\VendorResource\RelationManagers\KontakRelationManager;
 
@@ -56,7 +58,8 @@ class VendorResource extends Resource
     {
         return [
             KontakRelationManager::class,
-            KendaraanRelationManager::class
+            KendaraanRelationManager::class,
+            BarangRelationManager::class
         ];
     }
 

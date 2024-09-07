@@ -7,6 +7,7 @@ use App\Filament\Resources\HargaBarangResource\RelationManagers;
 use App\Http\Controllers\ActionTable;
 use App\Http\Controllers\HargaBarangController;
 use App\Models\HargaBarang;
+use App\Models\Produk;
 use App\Models\Vendor;
 use Filament\Forms;
 use Filament\Forms\Components\Select;
@@ -23,7 +24,7 @@ class HargaBarangResource extends Resource
 {
     protected static ?string $model = HargaBarang::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-presentation-chart-line';
 
     public static function form(Form $form): Form
     {
@@ -40,7 +41,7 @@ class HargaBarangResource extends Resource
         ->groups([
             Group::make('vendor.nama')
             ->collapsible()               
-             ->orderQueryUsing(fn (Builder $query, string $direction) => $query->orderBy('tahun_terbaru', $direction))
+             ->orderQueryUsing(fn (Builder $query, string $direction) => $query->orderBy('tahun_terbaru', $direction)->orderBy('id',$direction))
 
             ->label('Vendor')
             // ->getTitleFromRecordUsing('vendor.nama')
