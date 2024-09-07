@@ -55,7 +55,10 @@ class TableHargaBarangWidget extends BaseWidget
                         }
                     }
                 )
-                ->sortable(),
+                ->sortable()
+                ->numeric(null)
+                ->money('IDR',0,'id'),
+
                 TextColumn::make('status_perubahan')
                 ->label('Change %')
                 ->suffix('%')
@@ -68,6 +71,16 @@ class TableHargaBarangWidget extends BaseWidget
                             return'success';
                         } else {
                             return 'info';
+                        }
+                    }
+                )
+                ->icon(
+                    function ($state ){
+                        if ($state>1){
+                            return 'heroicon-o-arrow-trending-up';
+                        }else
+                        if ($state<0){
+                            return 'heroicon-o-arrow-trending-down';
                         }
                     }
                 )
