@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Filament\Forms\Components\Section;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
-use Filament\Tables\Columns\TextColumn;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Section;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
 
 class FormKontak extends Controller
 {
@@ -75,8 +76,23 @@ class FormKontak extends Controller
             TextColumn::make('nama')
             ->searchable(),
             TextColumn::make('email')
+            ->color('primary')
+            ->icon('heroicon-o-envelope-open')
+            ->url(
+                function (TextColumn $column, $record) {
+                    return 'https://mail.google.com/mail/?view=cm&fs=1&to='.urlencode($record->email);
+                }
+            )
             ->searchable(),
             TextColumn::make('telepon')
+            ->tooltip('kirim Whatsapp')
+            ->icon('heroicon-o-chat-bubble-oval-left')
+            ->color('success')
+            ->url(
+                function (TextColumn $column, $record) {
+                    return 'https://wa.me/'.Str::replaceFirst('0', '62', $record->telepon);
+                }
+            )
             ->searchable(),
             TextColumn::make('jabatan')
             ->searchable(),

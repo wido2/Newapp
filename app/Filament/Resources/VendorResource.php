@@ -2,22 +2,24 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\KendaraanResource\RelationManagers\SuratJalanRelationManager;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Vendor;
+use Filament\Forms\Get;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 
 use Filament\Resources\Resource;
+use App\Http\Controllers\ActionTable;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Controllers\VendorController;
 use App\Filament\Resources\VendorResource\Pages;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\VendorResource\RelationManagers;
 use App\Filament\Resources\VendorResource\RelationManagers\BarangRelationManager;
-use App\Filament\Resources\VendorResource\RelationManagers\KendaraanRelationManager;
 use App\Filament\Resources\VendorResource\RelationManagers\KontakRelationManager;
+use App\Filament\Resources\VendorResource\RelationManagers\KendaraanRelationManager;
+use App\Filament\Resources\KendaraanResource\RelationManagers\SuratJalanRelationManager;
 
 class VendorResource extends Resource
 {
@@ -43,10 +45,9 @@ class VendorResource extends Resource
             ->filters([
                 //
             ])
-            ->actions([
-                Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
-            ])
+            ->actions(
+                ActionTable::getActionTable()
+            )
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -56,11 +57,14 @@ class VendorResource extends Resource
 
     public static function getRelations(): array
     {
+        
         return [
+            BarangRelationManager::class,
             KontakRelationManager::class,
             KendaraanRelationManager::class,
-            BarangRelationManager::class
+            SuratJalanRelationManager::class
         ];
+       
     }
 
     public static function getPages(): array

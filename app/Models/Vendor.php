@@ -16,8 +16,13 @@ class Vendor extends Model
         'fax',
         'email',
         'website',
-        'kontak_id'
+        'kontak_id',
+        'vendor_category_id'
     ];
+    public function vendor_category()
+    {
+        return $this->belongsTo(VendorCategory::class);
+    }
     public function kontak()
     {
         return $this->hasMany(Kontak::class);
