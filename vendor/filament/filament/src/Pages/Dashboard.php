@@ -11,6 +11,7 @@ use Illuminate\Contracts\Support\Htmlable;
 class Dashboard extends Page
 {
     protected static string $routePath = '/';
+    
 
     protected static ?int $navigationSort = -2;
 

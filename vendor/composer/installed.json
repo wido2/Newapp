@@ -1405,8 +1405,8 @@
         },
         {
             "name": "filament/actions",
-            "version": "v3.2.111",
-            "version_normalized": "3.2.111.0",
+            "version": "v3.2.112",
+            "version_normalized": "3.2.112.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/actions.git",
@@ -1461,8 +1461,8 @@
         },
         {
             "name": "filament/filament",
-            "version": "v3.2.111",
-            "version_normalized": "3.2.111.0",
+            "version": "v3.2.112",
+            "version_normalized": "3.2.112.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/panels.git",
@@ -1529,17 +1529,17 @@
         },
         {
             "name": "filament/forms",
-            "version": "v3.2.111",
-            "version_normalized": "3.2.111.0",
+            "version": "v3.2.112",
+            "version_normalized": "3.2.112.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/forms.git",
-                "reference": "2f63e3f263c5940d8106fe15486a94350fdb7e98"
+                "reference": "99d72777f1e6dc5d42d936e7deb53148e4233ec3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filamentphp/forms/zipball/2f63e3f263c5940d8106fe15486a94350fdb7e98",
-                "reference": "2f63e3f263c5940d8106fe15486a94350fdb7e98",
+                "url": "https://api.github.com/repos/filamentphp/forms/zipball/99d72777f1e6dc5d42d936e7deb53148e4233ec3",
+                "reference": "99d72777f1e6dc5d42d936e7deb53148e4233ec3",
                 "shasum": ""
             },
             "require": {
@@ -1556,7 +1556,7 @@
                 "php": "^8.1",
                 "spatie/laravel-package-tools": "^1.9"
             },
-            "time": "2024-09-11T08:25:28+00:00",
+            "time": "2024-09-12T12:27:13+00:00",
             "type": "library",
             "extra": {
                 "laravel": {
@@ -1588,8 +1588,8 @@
         },
         {
             "name": "filament/infolists",
-            "version": "v3.2.111",
-            "version_normalized": "3.2.111.0",
+            "version": "v3.2.112",
+            "version_normalized": "3.2.112.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/infolists.git",
@@ -1642,8 +1642,8 @@
         },
         {
             "name": "filament/notifications",
-            "version": "v3.2.111",
-            "version_normalized": "3.2.111.0",
+            "version": "v3.2.112",
+            "version_normalized": "3.2.112.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/notifications.git",
@@ -1697,8 +1697,8 @@
         },
         {
             "name": "filament/support",
-            "version": "v3.2.111",
-            "version_normalized": "3.2.111.0",
+            "version": "v3.2.112",
+            "version_normalized": "3.2.112.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/support.git",
@@ -1759,8 +1759,8 @@
         },
         {
             "name": "filament/tables",
-            "version": "v3.2.111",
-            "version_normalized": "3.2.111.0",
+            "version": "v3.2.112",
+            "version_normalized": "3.2.112.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/tables.git",
@@ -1814,8 +1814,8 @@
         },
         {
             "name": "filament/widgets",
-            "version": "v3.2.111",
-            "version_normalized": "3.2.111.0",
+            "version": "v3.2.112",
+            "version_normalized": "3.2.112.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filamentphp/widgets.git",
@@ -2678,17 +2678,17 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v11.23.2",
-            "version_normalized": "11.23.2.0",
+            "version": "v11.23.4",
+            "version_normalized": "11.23.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "d38bf0fd3a8936e1cb9ca8eb8d7304a564f790f3"
+                "reference": "08b46ae7be52f71688196f98556d21cb2ec799b6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/d38bf0fd3a8936e1cb9ca8eb8d7304a564f790f3",
-                "reference": "d38bf0fd3a8936e1cb9ca8eb8d7304a564f790f3",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/08b46ae7be52f71688196f98556d21cb2ec799b6",
+                "reference": "08b46ae7be52f71688196f98556d21cb2ec799b6",
                 "shasum": ""
             },
             "require": {
@@ -2839,7 +2839,7 @@
                 "symfony/postmark-mailer": "Required to enable support for the Postmark mail transport (^7.0).",
                 "symfony/psr-http-message-bridge": "Required to use PSR-7 bridging features (^7.0)."
             },
-            "time": "2024-09-11T21:59:23+00:00",
+            "time": "2024-09-12T14:57:48+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
