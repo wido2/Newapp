@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Filament\Resources\AddressResource\Pages;
+namespace App\Filament\Clusters\Customer\Resources\AddressResource\Pages;
 
+use App\Filament\Clusters\Customer\Resources\AddressResource;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
-use App\Filament\Resources\AddressResource;
 
 class ListAddresses extends ListRecords
 {
-    
     protected static string $resource = AddressResource::class;
 
     protected function getHeaderActions(): array

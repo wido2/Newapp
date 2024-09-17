@@ -1,6 +1,6 @@
 <?php
-
 namespace App\Filament\Resources;
+
 
 use Filament\Forms;
 use Filament\Tables;
@@ -8,22 +8,24 @@ use App\Models\Address;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
+use App\Filament\Clusters\Customer;
+use App\Filament\Resources\AddressResource\Pages\CreateAddress;
+use App\Filament\Resources\AddressResource\Pages\EditAddress;
+use App\Filament\Resources\AddressResource\Pages\ListAddresses;
+use App\Filament\Resources\AddressResource\Pages\ViewAddress;
 use Filament\Tables\Grouping\Group;
 use App\Http\Controllers\FormAddress;
 use Illuminate\Database\Eloquent\Builder;
-use App\Filament\Resources\AddressResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\AddressResource\RelationManagers;
 
 class AddressResource extends Resource
 {
     protected static ?string $model = Address::class;
     protected static ?string $navigationGroup = 'Data Customer / Vendor';
-
     protected static?string $navigationLabel = 'Alamat';
     protected static?string $navigationIcon = 'heroicon-o-map';
     protected static?string $pluralModelLabel = 'Data Alamat';
 
+    
 
     public static function form(Form $form): Form
     {
@@ -73,10 +75,10 @@ class AddressResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListAddresses::route('/'),
-            'create' => Pages\CreateAddress::route('/create'),
-            'view' => Pages\ViewAddress::route('/{record}'),
-            'edit' => Pages\EditAddress::route('/{record}/edit'),
+            'index' => ListAddresses::route('/'),
+            'create' => CreateAddress::route('/create'),
+            'view' => ViewAddress::route('/{record}'),
+            'edit' => EditAddress::route('/{record}/edit'),
         ];
     }
 }

@@ -28,6 +28,7 @@ class CustomerResource extends Resource
     protected static ?string $navigationLabel = 'Customer';
     protected static ?string $navigationGroup = 'Data Customer / Vendor';
     protected static ?string $pluralModelLabel = 'Data Customer';
+    
 
 
 

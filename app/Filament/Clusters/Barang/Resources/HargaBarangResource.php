@@ -1,37 +1,39 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Clusters\Barang\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
-use App\Models\Produk;
-use App\Models\Vendor;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use App\Models\HargaBarang;
 use Filament\Resources\Resource;
+use App\Filament\Clusters\Barang;
 use Filament\Tables\Grouping\Group;
-use App\Http\Controllers\ActionTable;
-use Filament\Forms\Components\Select;
-use Filament\Tables\Filters\SelectFilter;
+use Filament\Pages\SubNavigationPosition;
 use Illuminate\Database\Eloquent\Builder;
 use App\Http\Controllers\HargaBarangController;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\HargaBarangResource\Pages;
-use App\Filament\Resources\HargaBarangResource\RelationManagers;
+use App\Filament\Clusters\Barang\Resources\HargaBarangResource\Pages;
+use App\Filament\Clusters\Barang\Resources\HargaBarangResource\RelationManagers;
+use App\Http\Controllers\ActionTable;
 
 class HargaBarangResource extends Resource
 {
     protected static ?string $model = HargaBarang::class;
 
+    protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
+    protected static ?int $navigationSort = 1;
     protected static ?string $navigationIcon = 'heroicon-o-presentation-chart-line';
+
+    protected static?string $pluralModelLabel = 'Harga Barang';
+
+    protected static ?string $cluster = Barang::class;
 
     public static function form(Form $form): Form
     {
         return $form
-            ->schema(
-                HargaBarangController::getFormHargaBarang()
-            );
+            ->schema(HargaBarangController::getFormHargaBarang());
     }
 
     public static function table(Table $table): Table
@@ -50,14 +52,15 @@ class HargaBarangResource extends Resource
             ->label('Vendor')
             // ->getTitleFromRecordUsing('vendor.nama')
         ])
-            ->columns(HargaBarangController::getTableHargaBarang()
+            ->columns(
+                HargaBarangController::getTableHargaBarang()
             )
             ->filters(
                 HargaBarangController::getFilterHargaBarang()
             )
             ->actions(
-                ActionTable::getActionTable()
-            )
+            ActionTable::getActionTable()
+                )
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -77,7 +80,6 @@ class HargaBarangResource extends Resource
         return [
             'index' => Pages\ListHargaBarangs::route('/'),
             'create' => Pages\CreateHargaBarang::route('/create'),
-            'view' => Pages\ViewHargaBarang::route('/{record}'),
             'edit' => Pages\EditHargaBarang::route('/{record}/edit'),
         ];
     }

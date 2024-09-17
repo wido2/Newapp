@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Filament\Resources\AddressResource\Pages;
+namespace App\Filament\Clusters\Customer\Resources\AddressResource\Pages;
 
+use App\Filament\Clusters\Customer\Resources\AddressResource;
 use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
-use App\Filament\Resources\AddressResource;
 
 class EditAddress extends EditRecord
 {
@@ -13,7 +13,6 @@ class EditAddress extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\ViewAction::make(),
             Actions\DeleteAction::make(),
         ];
     }
