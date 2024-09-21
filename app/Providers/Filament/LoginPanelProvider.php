@@ -26,7 +26,7 @@ class LoginPanelProvider extends PanelProvider
     {
         return $panel
             ->topNavigation()
-            
+            ->databaseNotifications()
             ->breadcrumbs(false)
             ->id('login')
             ->path('login')
@@ -49,7 +49,7 @@ class LoginPanelProvider extends PanelProvider
                 // Widgets\FilamentInfoWidget::class,
             ])
             ->plugins([
-                ReportsPlugin::make()
+                // ReportsPlugin::make()
             ])
             ->middleware([
                 EncryptCookies::class,

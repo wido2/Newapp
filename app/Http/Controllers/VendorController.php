@@ -48,6 +48,7 @@ class VendorController extends Controller
                 ])->columns(2),
                 Select::make('vendor_category_id')
                 ->columnSpan(1)
+                ->required()
                 ->editOptionForm(VendorCategoryController::getformcategoryvendor())
                 ->createOptionForm(VendorCategoryController::getformcategoryvendor())
                 ->relationship('vendor_category','nama')
@@ -67,13 +68,15 @@ class VendorController extends Controller
     static function getTableVendor():array{
         return [
             TextColumn::make('nama')
+            ->searchable()
             ->copyable()->label('Nama Vendor'),
-            Textcolumn::make('npwp')
+            TextColumn::make('vendor_category.nama')->label('Kategori')->searchable(),
+            Textcolumn::make('npwp')->searchable()
             ->copyable()->label('NPWP'),
-            Textcolumn::make('alamat')
+            Textcolumn::make('alamat')->searchable()
             ->copyable()
             ->copyMessage('Berhasil di Copy')->label('Alamat'),
-            Textcolumn::make('telepon')
+            Textcolumn::make('telepon')->searchable()
             ->url(
                 function (TextColumn $column, $record) {
                     return 'https://wa.me/'.Str::replaceFirst('0', '62', $record->telepon);
@@ -81,8 +84,9 @@ class VendorController extends Controller
             )
             ->label('Telepon'),
             Textcolumn::make('email')->label('Email'),
-            Textcolumn::make('website')->label('Website'),
-            TextColumn::make('vendor_category.nama')->label('Kategori')
+            Textcolumn::make('website')->label('Website')->toggleable(
+                isToggledHiddenByDefault: true
+            ),
             // TextInput::make('kontak.nama')->label('Kontak Person'),
         ];
     }

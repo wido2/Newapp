@@ -28,7 +28,10 @@ class TableHargaBarangWidget extends BaseWidget
                 TextColumn::make('vendor.nama'),
                 // TextColumn::make('tahun_kemarin'),
                 TextColumn::make('tahun_terbaru')
-                ->label('Update'),
+                ->label('Update')
+                ->date('d F y')
+                ->sinceTooltip(),
+                // ->dateTooltip(),
                 TextColumn::make('harga_kemarin')
                 ->money('IDR',0,'id'),
                 TextColumn::make('harga_terbaru')
