@@ -14,36 +14,36 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Clusters\Customer\Resources\KontakResource\Pages;
 use App\Filament\Clusters\Customer\Resources\KontakResource\RelationManagers;
+use App\Http\Controllers\ActionTable;
+use App\Http\Controllers\FormKontak;
 
 class KontakResource extends Resource
 {
+    protected static?string $navigationLabel = 'Kontak';
+
     protected static ?string $model = Kontak::class;
     protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
     protected static ?int $navigationSort = 3;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-identification';
 
     protected static ?string $cluster = Customer::class;
 
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                //
-            ]);
+            ->schema(
+                FormKontak::getFormKontak()
+            );
     }
 
     public static function table(Table $table): Table
     {
         return $table
-            ->columns([
-                //
-            ])
+            ->columns(FormKontak::getTableKontak())
             ->filters([
-                //
+                
             ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
+            ->actions(ActionTable::getActionTable())
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),

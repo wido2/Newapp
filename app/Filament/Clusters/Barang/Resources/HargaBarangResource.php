@@ -24,12 +24,17 @@ class HargaBarangResource extends Resource
 
     protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
     protected static ?int $navigationSort = 1;
+
     protected static ?string $navigationIcon = 'heroicon-o-presentation-chart-line';
 
     protected static?string $pluralModelLabel = 'Harga Barang';
 
     protected static ?string $cluster = Barang::class;
 
+    public static function getNavigationBadge(): ?string
+{
+    return static::getModel()::count();
+}
     public static function form(Form $form): Form
     {
         return $form

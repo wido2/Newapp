@@ -180,9 +180,9 @@ class FormKendaraan extends Controller
             ->columns(2 )
             ->description('Lampirkan data gambar hasil foto dan Scan Kendaraan, max file size 3Mb')
             ->schema([
-                    FileUpload::make('scan_stnk')->multiple()->image()->maxSize(4080)->maxFiles(2)->label('Scan STNK'),
-                    FileUpload::make('scan_bpkb')->multiple()->image()->maxFiles(7)->maxSize(4080)->label('Scan BPKB'),
-                    FileUpload::make('foto_kendaraan')->multiple()->image()->maxSize(4080)->label('Foto Kendaraan')
+                    FileUpload::make('scan_stnk')->directory('Data\Scan_STNK')->multiple()->image()->maxSize(4080)->maxFiles(2)->label('Scan STNK'),
+                    FileUpload::make('scan_bpkb')->directory('Data\Scan_BPKB')->multiple()->image()->maxFiles(7)->maxSize(4080)->label('Scan BPKB'),
+                    FileUpload::make('foto_kendaraan')->directory('Data\Foto_Kendaraan')->multiple()->image()->maxSize(4080)->label('Foto Kendaraan')
                 ->columnSpanFull()]),
         ];
     }
@@ -203,9 +203,9 @@ class FormKendaraan extends Controller
             TextColumn::make('nomor_bpkb')->searchable()->sortable()->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('tanggal_stnk')->sortable()->searchable()->toggleable(isToggledHiddenByDefault: true),
             TextColumn::make('tanggal_bpkb')->searchable()->sortable()->toggleable(isToggledHiddenByDefault: true),
-            ImageColumn::make('scan_stnk')->toggleable(isToggledHiddenByDefault:true),
-            ImageColumn::make('scan_bpkb')->toggleable(isToggledHiddenByDefault: true),
-            ImageColumn::make('foto_kendaraan')->toggleable(isToggledHiddenByDefault: true),
+            ImageColumn::make('scan_stnk')->stacked()->circular()->toggleable(isToggledHiddenByDefault:true),
+            ImageColumn::make('scan_bpkb')->stacked()->circular()->toggleable(isToggledHiddenByDefault: true),
+            ImageColumn::make('foto_kendaraan')->stacked()->circular()->toggleable(isToggledHiddenByDefault: true),
         ];
     }
 }

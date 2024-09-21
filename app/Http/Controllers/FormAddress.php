@@ -90,6 +90,7 @@ class FormAddress extends Controller
             TextColumn::make('street')
             ->limit(50),
             ToggleColumn::make('is_primary')
+            ->label('Primer')
         ];
     }
 }

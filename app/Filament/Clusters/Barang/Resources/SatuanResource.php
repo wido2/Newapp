@@ -25,10 +25,15 @@ class SatuanResource extends Resource
     protected static ?string $model = Satuan::class;
     protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
     protected static ?int $navigationSort = 4;
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-scale';
     protected static ?string $pluralModelLabel = 'Satuan';
 
     protected static ?string $cluster = Barang::class;
+
+    public static function getNavigationBadge(): ?string
+{
+    return static::getModel()::count();
+}
 
     public static function form(Form $form): Form
     {

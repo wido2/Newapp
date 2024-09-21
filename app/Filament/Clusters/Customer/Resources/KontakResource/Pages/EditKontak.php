@@ -9,7 +9,10 @@ use Filament\Resources\Pages\EditRecord;
 class EditKontak extends EditRecord
 {
     protected static string $resource = KontakResource::class;
-
+    protected function getRedirectUrl(): string
+    {
+        return $this->previousUrl ?? $this->getResource()::getUrl('index');
+    }
     protected function getHeaderActions(): array
     {
         return [

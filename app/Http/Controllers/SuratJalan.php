@@ -51,6 +51,7 @@ class SuratJalan extends Controller
                 Step::make('Informasi ')
                     ->icon('heroicon-o-queue-list')
                     ->description('Pengirim')
+                    ->columns(3)
                     ->schema([
                         TextInput::make('nomor_surat_jalan')
                             ->required()
@@ -103,18 +104,20 @@ class SuratJalan extends Controller
                             )
                         ->label('Penerima'),
                         Select::make('address')
+                        
                         // ->relationship('address','street')
                         ->hidden(fn (Get $get):bool =>!  $get('customer_id'))
                         ->columnSpanFull()
                         ->searchable()   
                         ->preload()
+                        ->noSearchResultsMessage('Jika tidak ditemukan, buat alamat baru dengan type WAREHOUSE')
                         ->getSearchResultsUsing(fn (Get $get):array=>
                         Address::where('customer_id','like',$get ('customer_id'))
                         ->where('address_type','=','Warehouse')
                            ->pluck('street','street')
                             ->toArray())
                         ->required()
-                        ->placeholder('Pilih Customer terlebih dahulu')
+                        ->placeholder('Alamat tidak ditemukan, buat alamat baru dengan type WAREHOUSE ')
                         ->label('Alamat Penerima')
                       
                     ]),
@@ -601,7 +604,7 @@ class SuratJalan extends Controller
 
                     ]),
             ])
-                ->startOnStep(5)
+                // ->startOnStep(5)
                 ->columnSpanFull(),
         ];
     }

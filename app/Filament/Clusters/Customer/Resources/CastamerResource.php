@@ -26,6 +26,7 @@ class CastamerResource extends Resource
     protected static ?string $model = Kastamer::class;
     protected static ?int $navigationSort = 1;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static?string $navigationLabel = 'Customer';
 
     protected static ?string $cluster = Customer::class;
 

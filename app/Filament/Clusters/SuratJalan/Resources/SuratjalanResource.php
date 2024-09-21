@@ -2,32 +2,40 @@
 
 namespace App\Filament\Clusters\SuratJalan\Resources;
 
+use Filament\Forms;
+use Filament\Tables;
+use Filament\Forms\Form;
+use Filament\Tables\Table;
+use Filament\Resources\Resource;
 use App\Filament\Clusters\SuratJalan;
+use Filament\Pages\SubNavigationPosition;
+use Illuminate\Database\Eloquent\Builder;
+use App\Models\SuratJalan as newSuratjalan;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Http\Controllers\SuratJalan as ControllersSuratJalan;
 use App\Filament\Clusters\SuratJalan\Resources\SuratjalanResource\Pages;
 use App\Filament\Clusters\SuratJalan\Resources\SuratjalanResource\RelationManagers;
-use App\Models\Suratjalan as newSuratjalan;
-use Filament\Forms;
-use Filament\Forms\Form;
-use Filament\Resources\Resource;
-use Filament\Tables;
-use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class SuratjalanResource extends Resource
 {
     protected static ?string $model = newSuratjalan::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
+    protected static ?int $navigationSort = 1;
+    protected static?string $pluralModelLabel = 'Surat Jalan'; 
+    protected static ?string $navigationIcon = 'heroicon-o-document-check';
 
     protected static ?string $cluster = SuratJalan::class;
 
+    public static function getNavigationBadge():?string
+    {
+        return static::getModel()::count();
+    }
     public static function form(Form $form): Form
     {
         return $form
-            ->schema([
-                //
-            ]);
+            ->schema(
+                ControllersSuratJalan::getFormSuratJalan()
+            );
     }
 
     public static function table(Table $table): Table

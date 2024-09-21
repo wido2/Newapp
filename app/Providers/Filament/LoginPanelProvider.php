@@ -26,17 +26,18 @@ class LoginPanelProvider extends PanelProvider
     {
         return $panel
             ->topNavigation()
-            ->default()
+            
+            ->breadcrumbs(false)
             ->id('login')
             ->path('login')
             ->login()
-            ->sidebarWidth('15rem')
-            ->font('roboto')
+            // ->sidebarWidth('15rem')
+            ->font('inter')
             
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
+            // ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
             ->pages([
                 Pages\Dashboard::class,
