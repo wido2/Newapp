@@ -2,9 +2,10 @@
 
 namespace App\Filament\Clusters\Barang\Resources\ProdukResource\Pages;
 
-use App\Filament\Clusters\Barang\Resources\ProdukResource;
 use Filament\Actions;
+use Filament\Support\Enums\Alignment;
 use Filament\Resources\Pages\EditRecord;
+use App\Filament\Clusters\Barang\Resources\ProdukResource;
 
 class EditProduk extends EditRecord
 {
@@ -15,5 +16,9 @@ class EditProduk extends EditRecord
         return [
             Actions\DeleteAction::make(),
         ];
+    }
+    public function getFormActionsAlignment(): string|Alignment
+    {
+        return Alignment::Right;
     }
 }

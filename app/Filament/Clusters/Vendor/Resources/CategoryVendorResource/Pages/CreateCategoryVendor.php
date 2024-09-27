@@ -2,10 +2,12 @@
 
 namespace App\Filament\Clusters\Vendor\Resources\CategoryVendorResource\Pages;
 
-use App\Filament\Clusters\Vendor\Resources\CategoryVendorResource;
+use auth;
+use App\Models\User;
 use Filament\Actions;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Clusters\Vendor\Resources\CategoryVendorResource;
 
 class CreateCategoryVendor extends CreateRecord
 {
@@ -14,11 +16,10 @@ class CreateCategoryVendor extends CreateRecord
     {
         return $this->previousUrl ?? $this->getResource()::getUrl('index');
     }
-    public function getCreatedNotification(): ?Notification{
-        return
-        Notification::make('Category Vendor has been created successfully.')
-        ->success()
-        ->title('Add Kategory')
-        ->body('Tambah Kategory Berhasil ');
+    public function toDatabase( $notifiable): array
+    {
+        return Notification::make()
+            ->title('Saved successfully')
+            ->getDatabaseMessage();
     }
 }

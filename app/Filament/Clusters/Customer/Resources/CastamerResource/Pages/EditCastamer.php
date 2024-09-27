@@ -2,9 +2,10 @@
 
 namespace App\Filament\Clusters\Customer\Resources\CastamerResource\Pages;
 
-use App\Filament\Clusters\Customer\Resources\CastamerResource;
 use Filament\Actions;
+use Filament\Support\Enums\Alignment;
 use Filament\Resources\Pages\EditRecord;
+use App\Filament\Clusters\Customer\Resources\CastamerResource;
 
 class EditCastamer extends EditRecord
 {
@@ -18,5 +19,9 @@ class EditCastamer extends EditRecord
         return [
             Actions\DeleteAction::make(),
         ];
+    }
+    public function getFormActionsAlignment(): string|Alignment
+    {
+        return Alignment::Right;
     }
 }

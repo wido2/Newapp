@@ -2,9 +2,10 @@
 
 namespace App\Filament\Clusters\Customer\Resources\CastamerResource\Pages;
 
-use App\Filament\Clusters\Customer\Resources\CastamerResource;
 use Filament\Actions;
+use Filament\Support\Enums\Alignment;
 use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Clusters\Customer\Resources\CastamerResource;
 
 class CreateCastamer extends CreateRecord
 {
@@ -12,5 +13,9 @@ class CreateCastamer extends CreateRecord
     protected function getRedirectUrl(): string
     {
         return $this->previousUrl ?? $this->getResource()::getUrl('index');
+    }
+    public function getFormActionsAlignment(): string|Alignment
+    {
+        return Alignment::Right;
     }
 }

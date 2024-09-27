@@ -2,9 +2,10 @@
 
 namespace App\Filament\Clusters\Barang\Resources\KategoriBarangResource\Pages;
 
-use App\Filament\Clusters\Barang\Resources\KategoriBarangResource;
 use Filament\Actions;
+use Filament\Support\Enums\Alignment;
 use Filament\Resources\Pages\CreateRecord;
+use App\Filament\Clusters\Barang\Resources\KategoriBarangResource;
 
 class CreateKategoriBarang extends CreateRecord
 {
@@ -12,5 +13,9 @@ class CreateKategoriBarang extends CreateRecord
     protected function getRedirectUrl(): string
     {
         return $this->previousUrl ?? $this->getResource()::getUrl('index');
+    }
+    public function getFormActionsAlignment(): string|Alignment
+    {
+        return Alignment::Right;
     }
 }

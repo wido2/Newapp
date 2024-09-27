@@ -2,9 +2,10 @@
 
 namespace App\Filament\Clusters\Customer\Resources\AddressResource\Pages;
 
-use App\Filament\Clusters\Customer\Resources\AddressResource;
 use Filament\Actions;
+use Filament\Support\Enums\Alignment;
 use Filament\Resources\Pages\EditRecord;
+use App\Filament\Clusters\Customer\Resources\AddressResource;
 
 class EditAddress extends EditRecord
 {
@@ -18,5 +19,9 @@ class EditAddress extends EditRecord
         return [
             Actions\DeleteAction::make(),
         ];
+    }
+    public function getFormActionsAlignment(): string|Alignment
+    {
+        return Alignment::Right;
     }
 }
