@@ -108,8 +108,6 @@ return array(
     'Filament\\' => array($vendorDir . '/filament/filament/src'),
     'Fidry\\CpuCoreCounter\\' => array($vendorDir . '/fidry/cpu-core-counter/src'),
     'Faker\\' => array($vendorDir . '/fakerphp/faker/src/Faker'),
-    'EightyNine\\Reports\\Database\\Factories\\' => array($vendorDir . '/eightynine/filament-reports/database/factories'),
-    'EightyNine\\Reports\\' => array($vendorDir . '/eightynine/filament-reports/src'),
     'Egulias\\EmailValidator\\' => array($vendorDir . '/egulias/email-validator/src'),
     'Dotenv\\' => array($vendorDir . '/vlucas/phpdotenv/src'),
     'Dompdf\\' => array($vendorDir . '/dompdf/dompdf/src'),

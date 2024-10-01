@@ -25,5 +25,9 @@ class Project extends Model
     {
         return $this->hasMany(ProjectItem::class);
     }
+    public function purchaseOrders()
+    {
+        return $this->hasMany(PurchaseOrder::class);
+    }
     
 }

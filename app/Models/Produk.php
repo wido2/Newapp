@@ -29,5 +29,10 @@ class Produk extends Model
     {
         return $this->hasMany(HargaBarang::class);
     }
+    public function purchase()
+    {
+        return $this->hasMany(PurchaseOrder::class);
+    }
+    
 
 }

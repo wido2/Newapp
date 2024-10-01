@@ -29,6 +29,7 @@ class LoginPanelProvider extends PanelProvider
             ->databaseNotifications()
             ->breadcrumbs(false)
             ->id('login')
+            ->default(true)
             ->path('login')
             ->login()
             // ->sidebarWidth('15rem')
