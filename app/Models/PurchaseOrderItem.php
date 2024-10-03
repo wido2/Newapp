@@ -13,6 +13,7 @@ class PurchaseOrderItem extends Model
         'purchase_order_id',
         'product_id',
         'quantity',
+        'satuan_id',
         'price',
         'discount',
         'subtotal',
@@ -26,5 +27,9 @@ class PurchaseOrderItem extends Model
     public function product()
     {
         return $this->belongsTo(Produk::class);
+    }
+    public function satuan()
+    {
+        return $this->belongsTo(Satuan::class);
     }
 }

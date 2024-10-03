@@ -27,6 +27,9 @@ class FormProject extends Controller
             ->required(),
             Select::make('customer_id')
             ->required()
+            ->createOptionForm(
+                FormCustomer::getFormCustomer()
+            )
             ->searchable()
             ->preload()
             ->relationship(

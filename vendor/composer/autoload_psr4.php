@@ -129,6 +129,9 @@ return array(
     'BladeUI\\Heroicons\\' => array($vendorDir . '/blade-ui-kit/blade-heroicons/src'),
     'Barryvdh\\DomPDF\\' => array($vendorDir . '/barryvdh/laravel-dompdf/src'),
     'Awcodes\\TableRepeater\\' => array($vendorDir . '/awcodes/filament-table-repeater/src'),
+    'Ariaieboy\\FilamentCurrency\\Database\\Factories\\' => array($vendorDir . '/ariaieboy/filament-currency/database/factories'),
+    'Ariaieboy\\FilamentCurrency\\' => array($vendorDir . '/ariaieboy/filament-currency/src'),
     'App\\' => array($baseDir . '/app', $vendorDir . '/laravel/pint/app'),
     'AnourValar\\EloquentSerialize\\' => array($vendorDir . '/anourvalar/eloquent-serialize/src'),
+    'Akaunting\\Money\\' => array($vendorDir . '/akaunting/laravel-money/src'),
 );
