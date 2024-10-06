@@ -11,20 +11,25 @@ class PurchaseOrderItem extends Model
 
     protected $fillable = [
         'purchase_order_id',
-        'product_id',
+        'produk_id',
         'quantity',
         'satuan_id',
         'price',
         'discount',
+        'pajak_id',
         'subtotal',
         'notes'
 
     ];
+    public function pajak()
+    {
+        return $this->belongsTo(Pajak::class);
+    }
     public function purchaseOrder()
     {
         return $this->belongsTo(PurchaseOrder::class);
     }
-    public function product()
+    public function produk()
     {
         return $this->belongsTo(Produk::class);
     }

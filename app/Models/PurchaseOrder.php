@@ -56,4 +56,5 @@ class PurchaseOrder extends Model
         return $this->belongsTo(PaymetTerm::class);
     }
     
+    
 }

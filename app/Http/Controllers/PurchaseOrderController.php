@@ -2,29 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pajak;
 use App\Models\Kontak;
+use App\Models\Produk;
 use App\Models\Vendor;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
+use App\Models\HargaBarang;
 use Illuminate\Http\Request;
 use App\Models\PurchaseOrder;
 use Awcodes\TableRepeater\Header;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
+
 use Filament\Forms\Components\Wizard;
 use Filament\Support\Enums\Alignment;
 use Filament\Forms\Components\Section;
 use function PHPUnit\Framework\isNull;
-
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\RichEditor;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\Placeholder;
+use Filament\Forms\Components\MarkdownEditor;
 use App\Http\Controllers\PaymetTermController;
-use App\Models\HargaBarang;
-use App\Models\Produk;
 use Awcodes\TableRepeater\Components\TableRepeater;
-use Filament\Forms\Components\Hidden;
-use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
 
 class PurchaseOrderController extends Controller
 {
@@ -43,9 +47,9 @@ class PurchaseOrderController extends Controller
                             ),
                         TextInput::make('nomor_po')
                         ->label('Nomor PO')
-                        ->default(
-                            nomorPO::generate(PurchaseOrder::count()+1)
-                        )
+                        // ->default(
+                        //     nomorPO::generate(PurchaseOrder::count()+1)
+                        // )
                         // ->readOnly()
                         ,
                         Select::make('paymet_term_id')
@@ -244,17 +248,28 @@ class PurchaseOrderController extends Controller
                             Header::make('subtotal')
                             ->width('170px'),
                             Header::make('notes')
-                            ->label('Keterangan'),
+                            ->label('Pajak %'),
                         ])
                         ->schema([
                             Select::make('produk_id')
-                            ->relationship('product','nama')
+                            // ->helperText('pilih barang sesuai dengan data barang')
+                            ->relationship('produk','nama')
+                            ->disableOptionsWhenSelectedInSiblingRepeaterItems()
                             ->createOptionForm(
                                 FormProduk::getFormProduk()
                             )
                             // ->live(onBlur:true,debounce:1500)
                             ->preload()
                             ->searchable()
+                            ->afterStateUpdated(function (Get $get, Set $set) {
+                                if (!$get('produk_id')) {
+                                    $set('quantity', null);
+                                    $set('price', null);
+                                    $set('satuan_id', null);
+                                    $set('discount', 0);
+                                    $set('subtotal', null);
+                                }
+                            })
                             ,
                             TextInput::make('quantity')
                             ->numeric()
@@ -269,6 +284,11 @@ class PurchaseOrderController extends Controller
                                     }else{
                                         $set('price',Produk::find($get('produk_id'))->harga_beli);
                                     }
+                                }
+                            )
+                            ->afterStateUpdated(
+                                function (Get $get, Set $set){
+                                    $set('pajak_id',Produk::find($get('produk_id'))->pajak_id);
                                 }
                             )
                             ->afterStateUpdated(function (Get $get, Set $set){
@@ -304,6 +324,7 @@ class PurchaseOrderController extends Controller
                             ,
                             TextInput::make('discount')
                             ->numeric()
+                            ->default(0)
                             ->live()
                             ->hidden(fn (Get $get ):bool=>!$get('price'))
                             ->afterStateUpdated(
@@ -320,39 +341,120 @@ class PurchaseOrderController extends Controller
                             ->readOnly()
                             // ->live(:)
                             ->currencyMask('.',',',2),
-                            Textarea::make('deskripsi')
+                            Select::make('pajak_id')
+                            ->live()
                             ->hidden(fn (Get $get)=>!$get('subtotal'))
+                            ->relationship('pajak','nama'),
+                            // Textarea::make('notes')  
+                            // ->hidden(fn (Get $get)=>!$get('subtotal'))
                             
                         ]),
-                Textarea::make('note') ,     
+                 
+                Hidden::make('status')->default('Confirmed'),  
                 Section::make('Total')
                 ->description('Total Belanja Keseluruhan')
                 ->aside()
                 ->compact()
                 ->icon('heroicon-o-shopping-cart')
+                ->columns(3)
                 ->schema([
 
                     Placeholder::make('Total')
                     ->content(
-                        function (Get $get): string {
-                            $total = collect($get('items'))->reduce(function ($carry, $item) {
-                                return $carry + $item['subtotal'];
-                            }, 0);
-                            return "Rp. ".number_format($total, 2);
+                        function (Get $get){
+                            $total = 0;
+                            foreach ($get('items') as $item) {
+                                $total += $item['price']*$item['quantity'];
+                            }
+                            return 'Rp '. number_format($total, 2, ',', '.');
+                            
                         }
                     ),
-                    Placeholder::make('Total Disc'),
-                    Hidden::make('total_po')
-                    ->default(fn(Get $get)=>$get('Total'))
-                ])
-                        
-                           
+                    Placeholder::make('Discount')
+                    ->content( 
+                        function (Get $get, Set $set) {
+                        $disc = 0;
+                        foreach ($get('items') as $item) {
+                            $disc += $item['price'] * $item['quantity'] * $item['discount'] / 100;
+                        }
+                        $set ('diskon',$disc);
+                        return 'Rp. '.number_format($disc,2,',','.');
+                    }
+                    ),
+                    Placeholder::make('ppn')
+                    ->content(
+                        function (Get $get, Set $set) {
+                            $ppn = 0;
+                            foreach ($get('items') as $item) {
+                                if ($item['pajak_id']) {
+                                    $pajak = Pajak::find($item['pajak_id']);
+                                    $ppn += $item['subtotal'] * ($pajak->persentase / 100);
+                                }
+                            }
+                            $set('ppn', $ppn);
+                            return 'Rp '. number_format($ppn, 2, ',', '.');
+                        }
+                    
+                    ),
+                    Placeholder::make('grandtotal')
+                    ->columnSpanFull()
+                    
+                    ->content(
+                        function (Get $get,Set $set){
+                            $total = 0;
+                            foreach ($get('items') as $item) {
+                                $total += $item['price']*$item['quantity'];
+                            }
                             
+                            $disc = 0;
+                        foreach ($get('items') as $item) {
+                            $disc += $item['price'] * $item['quantity'] * $item['discount'] / 100;
+                            }
+                        $ppn = 0;
+                            foreach ($get('items') as $item) {
+                                if ($item['pajak_id']) {
+                                    $pajak = Pajak::find($item['pajak_id']);
+                                    $ppn += $item['subtotal'] * ($pajak->persentase / 100);
+                                }
+                            }
+                        $grandtotal = $total+ $ppn - $disc ;
+                        $set('total_po',$grandtotal);
+                        return 'Rp '. number_format($grandtotal, 2, ',', '.');
+                        }
+                    )
+
+                    ,
+                    // Placeholder::make('yay'),
+                    TextInput::make('total_po')
+                    ->numeric(),
+                    TextInput::make('ppn'),
+                    TextInput::make('diskon')
+                    ]),
+                MarkdownEditor::make('note')
+                ->maxHeight('100px'),  
+                     
                     ])
             
             ])
             ->startOnStep(4)
             ->columnSpanFull()
+        ];
+    }
+    static function getTablePurchaseOrderResource(): array {
+        return [
+                TextColumn::make('id')->sortable(),
+                TextColumn::make('nomor_po')->sortable(),
+                TextColumn::make('tanggal_po')->sortable(),
+                TextColumn::make('tanggal_kirim')->sortable(),
+                TextColumn::make('tanggal_terima')->sortable(),
+                TextColumn::make('status')->sortable(),
+                TextColumn::make('total_po')->sortable(),
+                TextColumn::make('customer_id')->sortable(),
+                TextColumn::make('supplier_id')->sortable(),
+                TextColumn::make('user_id')->sortable(),
+                TextColumn::make('created_at')->sortable(),
+                TextColumn::make('updated_at')->sortable(),
+          
         ];
     }
 }

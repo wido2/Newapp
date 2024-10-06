@@ -4,40 +4,46 @@ namespace App\Filament\Clusters\Purchase\Resources;
 
 use Filament\Forms;
 use Filament\Tables;
+use App\Models\Pajak;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
-use App\Models\PurchaseOrder;
 use Filament\Resources\Resource;
 use App\Filament\Clusters\Purchase;
+use Filament\Forms\Components\Toggle;
+use Filament\Forms\Components\Section;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\TextInput;
+use App\Http\Controllers\PajakController;
 use Filament\Pages\SubNavigationPosition;
+use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Clusters\Purchase\Resources\PurchaseOrderResource\Pages;
-use App\Filament\Clusters\Purchase\Resources\PurchaseOrderResource\RelationManagers;
-use App\Http\Controllers\PurchaseOrderController;
+use App\Filament\Clusters\Purchase\Resources\PajakResource\Pages;
+use App\Filament\Clusters\Purchase\Resources\PajakResource\RelationManagers;
 
-class PurchaseOrderResource extends Resource
+class PajakResource extends Resource
 {
-    protected static ?string $model = PurchaseOrder::class;
+    protected static ?string $model = Pajak::class;
+
     protected static SubNavigationPosition $subNavigationPosition = SubNavigationPosition::Top;
-    protected static ?int $navigationSort = 1;
+    protected static ?int $navigationSort = 2;
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-    protected static ?string $navigationLabel = 'Orders';
 
     protected static ?string $cluster = Purchase::class;
-
 
     public static function form(Form $form): Form
     {
         return $form
-            ->schema(PurchaseOrderController::formPO());
+            ->schema(
+                PajakController::getFormpajak()
+            );
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns(
-                PurchaseOrderController::getTablePurchaseOrderResource()
+                PajakController::getTablePajak()
             )
             ->filters([
                 //
@@ -62,9 +68,9 @@ class PurchaseOrderResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPurchaseOrders::route('/'),
-            'create' => Pages\CreatePurchaseOrder::route('/create'),
-            'edit' => Pages\EditPurchaseOrder::route('/{record}/edit'),
+            'index' => Pages\ListPajaks::route('/'),
+            'create' => Pages\CreatePajak::route('/create'),
+            'edit' => Pages\EditPajak::route('/{record}/edit'),
         ];
     }
 }

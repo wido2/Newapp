@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pajak;
 use Filament\Forms\Components\Section;
 use Money\Money;
 use Illuminate\Http\Request;
@@ -21,10 +22,11 @@ class FormProduk extends Controller
             Section::make('Form Data Produks')
             ->collapsible()
             ->description('Detail Produk ')
-            ->columns(2)
+            ->columns(4)
             ->schema([
                 TextInput::make('nama')
-                ->placeholder('Konsumable | Raw Material | Jasa ')
+                ->columnSpan(2)
+                ->placeholder('Plat Ms 4\'x8\'')
                 ->required(),
                 Select::make('satuan_id')
                 ->searchable()
@@ -48,7 +50,19 @@ class FormProduk extends Controller
                 ->numeric()
                 ->default(1),
                 TextInput::make('harga_beli')
-                ->numeric(),
+                ->live()
+                ->numeric(
+                )
+                ,
+                Select::make('pajak_id')
+                ->relationship('pajak','nama')
+                ->preload()
+                ->searchable()
+                ->createOptionForm(
+                    PajakController::getFormPajak()
+                )
+                ->editOptionForm(PajakController::getFormpajak())
+                ,
                 Toggle::make('is_active')
                 ->default(true),
                 Textarea::make('deskripsi')
@@ -73,6 +87,9 @@ class FormProduk extends Controller
             TextColumn::make('harga_beli')
             ->money('idr')
                 ->sortable(),
+            TextColumn::make('pajak.persentase')
+            ->numeric()
+            ->suffix(' %'),
             ToggleColumn::make('is_active')
                 ->label('Aktif')
                 ->sortable()

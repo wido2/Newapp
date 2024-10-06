@@ -9,8 +9,12 @@ class Produk extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'nama', 'satuan_id','kategori_id','deskripsi','stok','harga_beli','is_active'
+        'nama', 'satuan_id','kategori_id','deskripsi','stok','harga_beli','pajak_id','is_active'
     ];
+    public function pajak()
+    {
+        return $this->belongsTo(Pajak::class);
+    }
 
     public function satuan()
     {
