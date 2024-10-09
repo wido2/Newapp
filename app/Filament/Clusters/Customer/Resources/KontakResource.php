@@ -27,6 +27,10 @@ class KontakResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-identification';
 
     protected static ?string $cluster = Customer::class;
+    public static function getNavigationBadge():?string
+    {
+        return static::getModel()::count();
+    }
 
     public static function form(Form $form): Form
     {

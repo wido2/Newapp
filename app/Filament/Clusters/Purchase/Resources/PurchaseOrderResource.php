@@ -13,8 +13,12 @@ use Filament\Pages\SubNavigationPosition;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Clusters\Purchase\Resources\PurchaseOrderResource\Pages;
+use App\Filament\Clusters\Purchase\Resources\PurchaseOrderResource\Pages\infoPO;
 use App\Filament\Clusters\Purchase\Resources\PurchaseOrderResource\RelationManagers;
 use App\Http\Controllers\PurchaseOrderController;
+use Carbon\Carbon;
+use Filament\Pages\Page;
+use Illuminate\Database\Eloquent\Model;
 
 class PurchaseOrderResource extends Resource
 {
@@ -26,6 +30,12 @@ class PurchaseOrderResource extends Resource
 
     protected static ?string $cluster = Purchase::class;
 
+    public static function getNavigationBadge(): ?string
+    {
+
+        $start=Carbon::today()->startOfMonth();
+        return static::getModel()::whereBetween('created_at',[$start,Carbon::today()])->count().' New in this month';
+    }
 
     public static function form(Form $form): Form
     {
@@ -36,6 +46,7 @@ class PurchaseOrderResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(fn (Model $record):string=>infoPO::getUrl([$record->id]))
             ->columns(
                 PurchaseOrderController::getTablePurchaseOrderResource()
             )
@@ -45,6 +56,7 @@ class PurchaseOrderResource extends Resource
             ->actions([
                 Tables\Actions\EditAction::make(),
             ])
+            ->defaultSort('created_at','desc')
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
@@ -62,6 +74,7 @@ class PurchaseOrderResource extends Resource
     public static function getPages(): array
     {
         return [
+            'viewPO'=> infoPO::route('/{record}/viewPO'),
             'index' => Pages\ListPurchaseOrders::route('/'),
             'create' => Pages\CreatePurchaseOrder::route('/create'),
             'edit' => Pages\EditPurchaseOrder::route('/{record}/edit'),

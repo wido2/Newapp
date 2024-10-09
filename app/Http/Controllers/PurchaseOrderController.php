@@ -29,6 +29,10 @@ use Filament\Forms\Components\MarkdownEditor;
 use App\Http\Controllers\PaymetTermController;
 use Awcodes\TableRepeater\Components\TableRepeater;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Support\HtmlString;
+use NumberFormatter;
+use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
+use Pelmered\FilamentMoneyField\Tables\Columns\MoneyColumn;
 
 class PurchaseOrderController extends Controller
 {
@@ -36,6 +40,7 @@ class PurchaseOrderController extends Controller
         return [
             Wizard::make([
                 Wizard\Step::make('Order')
+                    ->icon('heroicon-o-user-circle')
                     ->columns(4)
                     ->description('Order Number')
                     ->schema([
@@ -47,6 +52,9 @@ class PurchaseOrderController extends Controller
                             ),
                         TextInput::make('nomor_po')
                         ->label('Nomor PO')
+                        ->readOnly()
+                        ->placeholder('KBM/PO/xxx/xx')
+                        ->helperText('nomor akan terisi setelah di simpan')
                         // ->default(
                         //     nomorPO::generate(PurchaseOrder::count()+1)
                         // )
@@ -54,6 +62,7 @@ class PurchaseOrderController extends Controller
                         ,
                         Select::make('paymet_term_id')
                         ->label('Terms of Payment')
+                        ->required()
                         ->relationship('paymetTerm','nama')
                         ->preload()
                         ->editOptionForm(PaymetTermController::getForm())
@@ -67,6 +76,7 @@ class PurchaseOrderController extends Controller
                     ]),
                 Wizard\Step::make('Delivery')
                 ->columns(3)
+                ->icon('heroicon-o-map')
                 ->description('Supplier')
                 ->columns(4)
                     ->schema([
@@ -95,9 +105,20 @@ class PurchaseOrderController extends Controller
                             ,
                         
                         DatePicker::make('tanggal_pengiriman')
-                        ->default(date(now()))
-                            ->label('Tanggal Pengiriman'),
+                        // ->default(date(now()))
+                        ->hidden(fn (Get $get):bool=>!$get('vendor_id'))
+                        ->label('Tanggal Pengiriman'),
+                        TextInput::make('biaya_kirim')
+                        ->numeric()
+                        ->hidden(fn (Get $get):bool=>!$get('vendor_id'))
+                        ->prefix('Rp.')
+                        ->currencyMask(',','.')
+                        
+                        ,
                         Section::make('Supplier')
+                        ->collapsible()
+                        ->hidden(fn (Get $get):bool=>!$get('vendor_id'))
+                        
                         ->columns(4)
                         // ->collapsed()
                         ->description('Informasi SUpplier ( alamat, npwp, telpon, email)')
@@ -204,6 +225,7 @@ class PurchaseOrderController extends Controller
                             ])
                           ]),
                 Wizard\Step::make('Project')
+                ->icon('heroicon-o-presentation-chart-line')
                 ->description('Purchase for Project ')
                 ->columns(2)
                 ->schema([
@@ -223,7 +245,7 @@ class PurchaseOrderController extends Controller
                     )
                     ]),
                     Wizard\Step::make('Barang')
-                    
+                    ->icon('heroicon-o-qr-code')
                     ->description('Detail item Barang')
                     ->schema([
                         TableRepeater::make('items')
@@ -396,8 +418,12 @@ class PurchaseOrderController extends Controller
                         }
                     
                     ),
+                    Placeholder::make('biayakirim')
+                    ->content(
+                        
+                    ),
                     Placeholder::make('grandtotal')
-                    ->columnSpanFull()
+                    // ->columnSpanFull()
                     
                     ->content(
                         function (Get $get,Set $set){
@@ -421,14 +447,11 @@ class PurchaseOrderController extends Controller
                         $set('total_po',$grandtotal);
                         return 'Rp '. number_format($grandtotal, 2, ',', '.');
                         }
-                    )
+                    ),
 
-                    ,
-                    // Placeholder::make('yay'),
-                    TextInput::make('total_po')
-                    ->numeric(),
-                    TextInput::make('ppn'),
-                    TextInput::make('diskon')
+                    Hidden::make('total_po'),
+                    Hidden::make('ppn'),
+                    Hidden::make('diskon')
                     ]),
                 MarkdownEditor::make('note')
                 ->maxHeight('100px'),  
@@ -436,24 +459,42 @@ class PurchaseOrderController extends Controller
                     ])
             
             ])
-            ->startOnStep(4)
+            ->startOnStep(1)
             ->columnSpanFull()
         ];
     }
     static function getTablePurchaseOrderResource(): array {
         return [
-                TextColumn::make('id')->sortable(),
                 TextColumn::make('nomor_po')->sortable(),
-                TextColumn::make('tanggal_po')->sortable(),
-                TextColumn::make('tanggal_kirim')->sortable(),
-                TextColumn::make('tanggal_terima')->sortable(),
+                TextColumn::make('nomor_penawaran')->sortable(),
                 TextColumn::make('status')->sortable(),
-                TextColumn::make('total_po')->sortable(),
-                TextColumn::make('customer_id')->sortable(),
-                TextColumn::make('supplier_id')->sortable(),
-                TextColumn::make('user_id')->sortable(),
-                TextColumn::make('created_at')->sortable(),
-                TextColumn::make('updated_at')->sortable(),
+                TextColumn::make('vendor.nama')->sortable(),
+                TextColumn::make('kontak.nama')->sortable(),
+                TextColumn::make('paymetTerm.nama')->sortable(),
+                TextColumn::make('status')->sortable(),
+                TextColumn::make('total_po')
+               ->money('idr',0,'id')
+               ->searchable()
+                ->sortable(),
+                TextColumn::make('ppn')
+                ->money('idr',0,'id')->sortable(),
+                TextColumn::make('project.nama')
+                
+                ->money('idr',0,'id')->sortable(),
+                TextColumn::make('diskon')
+                
+                ->money('idr',0,'id')->sortable(),
+                MoneyColumn::make('biaya_kirim')
+                ->currency('idr')
+                ->locale('id')
+                ->money('idr',0,'id')
+                ,
+                TextColumn::make('total_bayar')
+                
+                ->money('idr',0,'id')->sortable(),
+                TextColumn::make('note')->limit(90)->sortable(),
+                
+
           
         ];
     }

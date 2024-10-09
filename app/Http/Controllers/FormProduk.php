@@ -78,7 +78,7 @@ class FormProduk extends Controller
     static function getTableProduk():array {
         return [
             // Add table columns for the produk table
-            TextColumn::make('nama'),
+            TextColumn::make('nama')->searchable()->sortable(),
             TextColumn::make('satuan.nama')
                 ->searchable(),
             TextColumn::make('kategori.nama')

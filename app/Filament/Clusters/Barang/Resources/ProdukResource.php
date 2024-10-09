@@ -2,6 +2,7 @@
 
 namespace App\Filament\Clusters\Barang\Resources;
 
+use layout;
 use Filament\Forms;
 use Filament\Tables;
 use App\Models\Produk;
@@ -9,13 +10,19 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use App\Filament\Clusters\Barang;
+use Filament\Tables\Grouping\Group;
+use App\Http\Controllers\FormProduk;
+use App\Http\Controllers\ActionTable;
+use Filament\Tables\Enums\FiltersLayout;
 use Filament\Pages\SubNavigationPosition;
+use Filament\Tables\Filters\QueryBuilder;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Clusters\Barang\Resources\ProdukResource\Pages;
+use Filament\Tables\Filters\QueryBuilder\Constraints\TextConstraint;
 use App\Filament\Clusters\Barang\Resources\ProdukResource\RelationManagers;
-use App\Http\Controllers\ActionTable;
-use App\Http\Controllers\FormProduk;
+use Filament\Support\Enums\MaxWidth;
 
 class ProdukResource extends Resource
 {
@@ -42,12 +49,27 @@ class ProdukResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+        ->defaultSort('created_at','desc')
+        ->groups([
+            Group::make('nama'),
+            Group::make('kategori.nama')
+        ])
             ->columns(
                 FormProduk::getTableProduk()
             )
+            ->filtersFormWidth(MaxWidth::Medium)
+            ->filtersFormMaxHeight('350px')
             ->filters([
-                //
-            ])
+                SelectFilter::make('kategori')
+                ->relationship('kategori','nama')
+                ->searchable()
+                ->preload(),
+                QueryBuilder::make()
+                ->constraints([
+                    TextConstraint::make('nama'),
+                    TextConstraint::make('harga_beli')
+                ],)
+            ],layout: FiltersLayout::Modal)
             ->actions(ActionTable::getActionTable())
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
