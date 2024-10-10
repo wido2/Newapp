@@ -26,7 +26,8 @@ class LoginPanelProvider extends PanelProvider
     {
         return $panel
             ->topNavigation()
-            ->databaseNotifications()
+            // ->databaseNotifications()
+            ->sidebarFullyCollapsibleOnDesktop()
             ->breadcrumbs(false)
             ->id('login')
             ->default(true)

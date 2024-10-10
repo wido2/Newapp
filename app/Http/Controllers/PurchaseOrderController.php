@@ -28,7 +28,9 @@ use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\MarkdownEditor;
 use App\Http\Controllers\PaymetTermController;
 use Awcodes\TableRepeater\Components\TableRepeater;
+use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Support\HtmlString;
 use NumberFormatter;
 use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
@@ -71,6 +73,7 @@ class PurchaseOrderController extends Controller
                         ->placeholder('Payment Term')
                         ,
                         TextInput::make('nomor_penawaran')
+                        ->required()
                         ->label('Nomor Penawaran'),
                         
                     ]),
@@ -383,11 +386,12 @@ class PurchaseOrderController extends Controller
 
                     Placeholder::make('Total')
                     ->content(
-                        function (Get $get){
+                        function (Get $get,Set $set){
                             $total = 0;
                             foreach ($get('items') as $item) {
                                 $total += $item['price']*$item['quantity'];
                             }
+                            $set('total_po',$total);
                             return 'Rp '. number_format($total, 2, ',', '.');
                             
                         }
@@ -420,7 +424,13 @@ class PurchaseOrderController extends Controller
                     ),
                     Placeholder::make('biayakirim')
                     ->content(
-                        
+                        function (Get $get){
+                            $biayakirim=0;
+                            if($get('biaya_kirim')){
+                                $biayakirim = $get('biaya_kirim');
+                            }
+                            return 'Rp '. number_format($biayakirim,0,',','.');
+                        }
                     ),
                     Placeholder::make('grandtotal')
                     // ->columnSpanFull()
@@ -443,18 +453,20 @@ class PurchaseOrderController extends Controller
                                     $ppn += $item['subtotal'] * ($pajak->persentase / 100);
                                 }
                             }
-                        $grandtotal = $total+ $ppn - $disc ;
-                        $set('total_po',$grandtotal);
+                        $biaya_kirim=$get('biaya_kirim');
+                        $grandtotal = $total+ $ppn + $biaya_kirim - $disc ;
+                        $set('total_bayar',$grandtotal);
                         return 'Rp '. number_format($grandtotal, 2, ',', '.');
                         }
                     ),
-
+                    Hidden::make('biaya_kirim'),
                     Hidden::make('total_po'),
                     Hidden::make('ppn'),
-                    Hidden::make('diskon')
+                    Hidden::make('diskon'),
+                    Hidden::make('total_bayar')
                     ]),
-                MarkdownEditor::make('note')
-                ->maxHeight('100px'),  
+                RichEditor::make('note')
+                ,  
                      
                     ])
             
@@ -466,33 +478,59 @@ class PurchaseOrderController extends Controller
     static function getTablePurchaseOrderResource(): array {
         return [
                 TextColumn::make('nomor_po')->sortable(),
-                TextColumn::make('nomor_penawaran')->sortable(),
-                TextColumn::make('status')->sortable(),
+                TextColumn::make('nomor_penawaran')
+                ->alignCenter(true)->sortable(),
+                TextColumn::make('status')
+                ->badge(true)
+                ->color(
+                    function ($state) {
+                        if ($state=='Confirmed'){
+                            return 'success';
+                        } elseif ($state=='Cancelled'){
+                            return 'danger';
+                        }elseif($state=='Delivered'){
+                            return'info';
+                        }elseif($state=='Returned'){
+                            return'warning';
+                        }
+                    }
+                )
+                ->sortable(),
+                TextColumn::make('created_at')->label('Creation Date')->date()->sinceTooltip(),
+                TextColumn::make('tanggal_pengiriman')->toggleable(isToggledHiddenByDefault:true),
+                TextColumn::make('tanggal_retur')->toggleable(isToggledHiddenByDefault:true),
                 TextColumn::make('vendor.nama')->sortable(),
-                TextColumn::make('kontak.nama')->sortable(),
-                TextColumn::make('paymetTerm.nama')->sortable(),
+                TextColumn::make('kontak.nama')->sortable()
+                ->toggleable(isToggledHiddenByDefault:true),
+                TextColumn::make('paymetTerm.nama')
+                ->toggleable(isToggledHiddenByDefault:true)->sortable(),
                 TextColumn::make('status')->sortable(),
                 TextColumn::make('total_po')
+                ->label('Total PO')
+
+                ->toggleable(isToggledHiddenByDefault:true)
                ->money('idr',0,'id')
                ->searchable()
                 ->sortable(),
                 TextColumn::make('ppn')
+                ->label('PPN')
+                ->toggleable(isToggledHiddenByDefault:true)
                 ->money('idr',0,'id')->sortable(),
                 TextColumn::make('project.nama')
-                
-                ->money('idr',0,'id')->sortable(),
+                ->toggleable(isToggledHiddenByDefault:true),
                 TextColumn::make('diskon')
-                
+                ->toggleable(isToggledHiddenByDefault:true)
                 ->money('idr',0,'id')->sortable(),
                 MoneyColumn::make('biaya_kirim')
+                ->toggleable(isToggledHiddenByDefault:true)
+                ->sortable()
                 ->currency('idr')
                 ->locale('id')
-                ->money('idr',0,'id')
-                ,
+                ->money('idr',0,'id'),
                 TextColumn::make('total_bayar')
-                
+                ->label('Total Pembelian')
                 ->money('idr',0,'id')->sortable(),
-                TextColumn::make('note')->limit(90)->sortable(),
+                TextColumn::make('note')->limit(90)->toggleable(isToggledHiddenByDefault:true)->sortable()->searchable(),
                 
 
           

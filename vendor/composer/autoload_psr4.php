@@ -69,6 +69,7 @@ return array(
     'ParaTest\\' => array($vendorDir . '/brianium/paratest/src'),
     'PHPUnit\\Architecture\\' => array($vendorDir . '/ta-tikoma/phpunit-architecture-test/src'),
     'PHPStan\\PhpDocParser\\' => array($vendorDir . '/phpstan/phpdoc-parser/src'),
+    'OwenVoke\\BladeFontAwesome\\' => array($vendorDir . '/owenvoke/blade-fontawesome/src'),
     'OpenSpout\\' => array($vendorDir . '/openspout/openspout/src'),
     'NunoMaduro\\Collision\\' => array($vendorDir . '/nunomaduro/collision/src'),
     'Monolog\\' => array($vendorDir . '/monolog/monolog/src/Monolog'),

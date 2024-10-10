@@ -16,6 +16,8 @@ class PurchaseOrder extends Model
          'kontak_id', 
          'paymet_term_id',
          'tanggal_pengiriman', 
+         'tanggal_retur',
+         'pengganti_po',
          'project_id',
          'project_item_id',
          'total_po', 
@@ -25,6 +27,9 @@ class PurchaseOrder extends Model
           'biaya_kirim',
           'status', 
           'note'
+    ];
+    protected $cast = [
+        'note'
     ];
     public function user()
     {

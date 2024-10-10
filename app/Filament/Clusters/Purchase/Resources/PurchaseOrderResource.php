@@ -18,6 +18,7 @@ use App\Filament\Clusters\Purchase\Resources\PurchaseOrderResource\RelationManag
 use App\Http\Controllers\PurchaseOrderController;
 use Carbon\Carbon;
 use Filament\Pages\Page;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Model;
 
 class PurchaseOrderResource extends Resource
@@ -51,7 +52,10 @@ class PurchaseOrderResource extends Resource
                 PurchaseOrderController::getTablePurchaseOrderResource()
             )
             ->filters([
-                //
+                SelectFilter::make('vendor_id')
+                ->relationship('vendor','nama',fn (Builder $query)=>$query->whereHas('vendor_category',function (Builder $query ){
+                    return $query->where('nama','=','Supplier');
+                }))
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
