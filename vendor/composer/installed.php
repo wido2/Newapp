@@ -3,7 +3,7 @@
         'name' => 'laravel/laravel',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '7e38de3f3f93cbfb7a7f58c0cc68ac4a8a42cd69',
+        'reference' => '7ab5c5b0d80b90fc01beecd62ce5ac1bcae1a6db',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -586,7 +586,7 @@
         'laravel/laravel' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '7e38de3f3f93cbfb7a7f58c0cc68ac4a8a42cd69',
+            'reference' => '7ab5c5b0d80b90fc01beecd62ce5ac1bcae1a6db',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -1319,6 +1319,15 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
+        'spatie/browsershot' => array(
+            'pretty_version' => '4.3.0',
+            'version' => '4.3.0.0',
+            'reference' => '601f2758191d8c46b2ea587eea935a87da4f39e8',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spatie/browsershot',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'spatie/color' => array(
             'pretty_version' => '1.5.3',
             'version' => '1.5.3.0',
@@ -1346,11 +1355,29 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'spatie/laravel-pdf' => array(
+            'pretty_version' => '1.5.2',
+            'version' => '1.5.2.0',
+            'reference' => 'fadf23c6249c491fd4924f8ec37166a283269966',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spatie/laravel-pdf',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'spatie/once' => array(
             'dev_requirement' => false,
             'replaced' => array(
                 0 => '*',
             ),
+        ),
+        'spatie/temporary-directory' => array(
+            'pretty_version' => '2.2.1',
+            'version' => '2.2.1.0',
+            'reference' => '76949fa18f8e1a7f663fd2eaa1d00e0bcea0752a',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spatie/temporary-directory',
+            'aliases' => array(),
+            'dev_requirement' => false,
         ),
         'symfony/clock' => array(
             'pretty_version' => 'v7.1.1',
