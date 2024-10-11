@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use NumberFormatter;
 use App\Models\Pajak;
 use App\Models\Kontak;
 use App\Models\Produk;
@@ -11,33 +12,40 @@ use Filament\Forms\Set;
 use App\Models\HargaBarang;
 use Illuminate\Http\Request;
 use App\Models\PurchaseOrder;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Awcodes\TableRepeater\Header;
+
+use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
-
 use Filament\Forms\Components\Wizard;
 use Filament\Support\Enums\Alignment;
 use Filament\Forms\Components\Section;
-use function PHPUnit\Framework\isNull;
 use Filament\Forms\Components\Textarea;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\RichEditor;
+use Filament\Tables\Columns\SelectColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\MarkdownEditor;
 use App\Http\Controllers\PaymetTermController;
 use Awcodes\TableRepeater\Components\TableRepeater;
-use Filament\Tables\Columns\SelectColumn;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
-use Illuminate\Support\HtmlString;
-use NumberFormatter;
-use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
 use Pelmered\FilamentMoneyField\Tables\Columns\MoneyColumn;
+use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
 
 class PurchaseOrderController extends Controller
 {
+    public static function getPO($record){
+        $po=PurchaseOrder::findOrFail($record);
+        if($record){
+            $pdf = Pdf::loadView('purchase');
+            return $pdf->stream('purchase.pdf');
+        }
+        return view('purchase',compact('po'));
+    }
     static function formPO():array{
         return [
             Wizard::make([

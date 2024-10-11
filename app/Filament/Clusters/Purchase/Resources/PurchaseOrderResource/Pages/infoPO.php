@@ -2,26 +2,35 @@
 
 namespace App\Filament\Clusters\Purchase\Resources\PurchaseOrderResource\Pages;
 
+use Dompdf\Dompdf;
+use Dompdf\Options;
 use Filament\Actions;
 use function Livewire\wrap;
 use Illuminate\Support\Str;
 use App\Models\PurchaseOrder;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Filament\Actions\EditAction;
 use Filament\Infolists\Infolist;
-
 use Filament\Actions\ActionGroup;
 use Illuminate\Support\HtmlString;
+use App\Filament\Clusters\Purchase;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\App;
 use Filament\Support\Enums\FontWeight;
+use Illuminate\Database\Eloquent\Model;
+
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Forms\Components\DatePicker;
+use Filament\Actions\Action as headaction;
 use Filament\Infolists\Components\Section;
 use Illuminate\Contracts\Support\Htmlable;
 use Filament\Infolists\Components\Fieldset;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ViewEntry;
+use Symfony\Component\HttpFoundation\Response;
+use App\Http\Controllers\PurchaseOrderController;
 use Filament\Infolists\Components\Actions\Action;
 use Filament\Infolists\Components\RepeatableEntry;
-
 use Filament\Infolists\Components\TextEntry\TextEntrySize;
 use App\Filament\Clusters\Purchase\Resources\PurchaseOrderResource;
 
@@ -32,7 +41,67 @@ class infoPO extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Actions\EditAction::make(),
+            ActionGroup::make([
+                EditAction::make('edit')
+                ->color('primary')
+                ->icon('fas-x'),
+                headaction::make('Cancle')
+                ->requiresConfirmation()
+                ->color('danger')
+                
+                ->icon('fas-x')
+                ->action(
+                    function(Model $record, array $data):Model{
+                        $record->status = 'Cancelled';
+                        $record->save();
+                        return $record;
+                    }
+                ),
+                headaction::make('Export')
+                ->label('Export PDF')
+                ->icon('fas-file-pdf')
+                ->color('danger')
+                ->action(
+                    function (PurchaseOrder $record) {
+                        return $this->downloadPDF($record);
+                    }
+                )
+                // ->requiresConfirmation()
+                // ->modalHeading('Export to PDF   !')
+                ,
+                headaction::make('Confirm')
+                ->requiresConfirmation()
+                ->icon('fas-check-circle')
+                ->color('success')
+                ->action(
+                    function(Model $record, array $data):Model{
+                        $record->status = 'Confirmed';
+                        $record->save();
+                        return $record;
+                    }
+                ),
+                headaction::make('retur')
+                ->icon('heroicon-o-arrow-path')
+                ->requiresConfirmation()
+                ->color('primary')
+                ->fillForm(
+                    fn(Model $record):array=>[
+                        'tanggal_retur'=>$record->tanggal_retur
+                    ]
+                )
+                ->form([
+                    DatePicker::make('tanggal_retur')
+                ])
+                ->label('Return PO')
+                ->action(
+                    function(Model $record, array $data):Model{
+                        $record->tanggal_retur = $data['tanggal_retur'];
+                        $record->status='Returned';
+                        $record->save();
+                        return $record;
+                    }
+                )
+            ])->label('More Actions')->button()->color('success')
             
         ];
     }
@@ -40,7 +109,18 @@ class infoPO extends ViewRecord
     {
         return 'Purchase Order #'.$this->record->nomor_po;
     }
+    private function downloadPDF( PurchaseOrder $record):Response
+    {
+        $pdf = new Dompdf();
+        $pdf->loadHtml(view('purchase', compact('record')));
+        $pdf->setPaper('A4', 'portrait');
+        $pdf->render();
 
+        return response()->streamDownload(function () use ($pdf) {
+            echo $pdf->output();
+        }, 'Purchase_Order_' . Str::replace('/', '-', $record->nomor_po) .'.pdf');
+    }
+    
     public function infolist(Infolist $infolist): Infolist
     {
         return $infolist
@@ -48,8 +128,10 @@ class infoPO extends ViewRecord
             Section::make('Purchase Order')
             ->compact()
             ->headerActions([
+                
+               
                 Action::make('wa')
-                ->label(' ')
+                ->label('Whatsapp')
                 ->tooltip('Send Whatsapp')
                 ->url(
                     function($record) {
@@ -66,18 +148,8 @@ class infoPO extends ViewRecord
                 )
                 ->openUrlInNewTab(true)
                 ->icon('fab-whatsapp'),
-                Action::make('Cancel PO')
-                ->icon('heroicon-o-x-mark')
-                ->label('Cancel PO')
-                ->requiresConfirmation()
-                ->color('danger')
-                ->action( fn (PurchaseOrder $record)=>$record->update(['status'=>'Cancelled'])),
-                Action::make('Confirm')
-                ->requiresConfirmation()
-                ->icon('heroicon-o-check-badge')
-                ->color('success')
-                ->label('Confirm PO')
-                ->action(fn (PurchaseOrder $record)=>$record->update(['status'=>'Confirmed'])),
+                
+                
                 Action::make('Delivered')
                 ->requiresConfirmation()
                 ->icon('heroicon-o-clipboard-document-list')
@@ -93,23 +165,7 @@ class infoPO extends ViewRecord
                     'status'=>'Delivered',
                     'tanggal_pengiriman'=>$data['tanggal_pengiriman']
                 ])),
-                Action::make('Returned')
-                ->icon('heroicon-o-arrow-path')
-                ->requiresConfirmation()
-                ->color('primary')
-                ->fillForm(
-                    fn(PurchaseOrder $record):array=>[
-                        'tanggal_retur'=>$record->tanggal_retur
-                    ]
-                )
-                ->form([
-                    DatePicker::make('tanggal_retur')
-                ])
-                ->label('Return PO')
-                ->action(fn (array $data,PurchaseOrder $record)=>$record->update([
-                    'status'=>'Returned',
-                    'tanggal_retur'=>$data['tanggal_retur']
-                ])),
+                
             ])
             ->icon('heroicon-o-shopping-bag')
             ->description('Lihat Detail Item Purchase Order')
