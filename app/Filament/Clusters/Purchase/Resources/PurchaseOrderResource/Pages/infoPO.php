@@ -30,7 +30,6 @@ use Filament\Infolists\Components\Actions\Action;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry\TextEntrySize;
 use App\Filament\Clusters\Purchase\Resources\PurchaseOrderResource;
-use function Spatie\LaravelPdf\Support\pdf;
 class infoPO extends ViewRecord
 {
     protected static string $resource = PurchaseOrderResource::class;
