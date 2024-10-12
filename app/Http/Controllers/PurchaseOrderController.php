@@ -38,14 +38,7 @@ use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
 
 class PurchaseOrderController extends Controller
 {
-    public static function getPO($record){
-        $po=PurchaseOrder::findOrFail($record);
-        if($record){
-            $pdf = Pdf::loadView('purchase');
-            return $pdf->stream('purchase.pdf');
-        }
-        return view('purchase',compact('po'));
-    }
+    
     static function formPO():array{
         return [
             Wizard::make([

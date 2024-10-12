@@ -2,13 +2,10 @@
 
 namespace App\Filament\Clusters\Purchase\Resources\PurchaseOrderResource\Pages;
 
-use Dompdf\Dompdf;
-use Dompdf\Options;
 use Filament\Actions;
 use function Livewire\wrap;
 use Illuminate\Support\Str;
 use App\Models\PurchaseOrder;
-use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions\EditAction;
 use Filament\Infolists\Infolist;
 use Filament\Actions\ActionGroup;
@@ -17,8 +14,8 @@ use App\Filament\Clusters\Purchase;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Facades\App;
 use Filament\Support\Enums\FontWeight;
-use Illuminate\Database\Eloquent\Model;
 
+use Illuminate\Database\Eloquent\Model;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Forms\Components\DatePicker;
 use Filament\Actions\Action as headaction;
@@ -33,7 +30,7 @@ use Filament\Infolists\Components\Actions\Action;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry\TextEntrySize;
 use App\Filament\Clusters\Purchase\Resources\PurchaseOrderResource;
-
+use function Spatie\LaravelPdf\Support\pdf;
 class infoPO extends ViewRecord
 {
     protected static string $resource = PurchaseOrderResource::class;
@@ -59,10 +56,11 @@ class infoPO extends ViewRecord
                 ),
                 headaction::make('Export')
                 ->label('Export PDF')
+                ->openUrlInNewTab(true)
                 ->icon('fas-file-pdf')
                 ->color('danger')
                 ->action(
-                    function (PurchaseOrder $record) {
+                    function (Model $record) {
                         return $this->downloadPDF($record);
                     }
                 )
@@ -109,16 +107,9 @@ class infoPO extends ViewRecord
     {
         return 'Purchase Order #'.$this->record->nomor_po;
     }
-    private function downloadPDF( PurchaseOrder $record):Response
+    private function downloadPDF(Model $record)
     {
-        $pdf = new Dompdf();
-        $pdf->loadHtml(view('purchase', compact('record')));
-        $pdf->setPaper('A4', 'portrait');
-        $pdf->render();
-
-        return response()->streamDownload(function () use ($pdf) {
-            echo $pdf->output();
-        }, 'Purchase_Order_' . Str::replace('/', '-', $record->nomor_po) .'.pdf');
+       return pdf()>view('purchase',['record'=>$record]);
     }
     
     public function infolist(Infolist $infolist): Infolist

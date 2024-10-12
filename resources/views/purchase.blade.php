@@ -1,343 +1,137 @@
-<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <style>le>
-        /* Housekeeping */
-body{
-  font-size:12px;
-}
-.spreadSheetGroup{
-    /*font:0.75em/1.5 sans-serif;
-    font-size:14px;
-  */
-    color:#333;
-    background-color:#fff;
-    padding:1em;
-}
-
-/* Tables */
-.spreadSheetGroup table{
-    width:100%;
-    margin-bottom:1em;
-    border-collapse: collapse;
-}
-.spreadSheetGroup .proposedWork th{
-    background-color:#eee;
-}
-.tableBorder th{
-  background-color:#eee;
-}
-.spreadSheetGroup th,
-.spreadSheetGroup tbody td{
-    padding:0.5em;
-
-}
-.spreadSheetGroup tfoot td{
-    padding:0.5em;
-
-}
-.spreadSheetGroup td:focus { 
-  border:1px solid #fff;
-  -webkit-box-shadow:inset 0px 0px 0px 2px #5292F7;
-  -moz-box-shadow:inset 0px 0px 0px 2px #5292F7;
-  box-shadow:inset 0px 0px 0px 2px #5292F7;
-  outline: none;
-}
-.spreadSheetGroup .spreadSheetTitle{ 
-  font-weight: bold;
-}
-.spreadSheetGroup tr td{
-  text-align:center;
-}
-/*
-.spreadSheetGroup tr td:nth-child(2){
-  text-align:left;
-  width:100%;
-}
-*/
-
-/*
-.documentArea.active tr td.calculation{
-  background-color:#fafafa;
-  text-align:right;
-  cursor: not-allowed;
-}
-*/
-.spreadSheetGroup .calculation::before, .spreadSheetGroup .groupTotal::before{
-  /*content: "$";*/
-}
-.spreadSheetGroup .trAdd{
-  background-color: #007bff !important;
-  color:#fff;
-  font-weight:800;
-  cursor: pointer;
-}
-.spreadSheetGroup .tdDelete{
-  background-color: #eee;
-  color:#888;
-  font-weight:800;
-  cursor: pointer;
-}
-.spreadSheetGroup .tdDelete:hover{
-  background-color: #df5640;
-  color:#fff;
-  border-color: #ce3118;
-}
-.documentControls{
-  text-align:right;
-}
-.spreadSheetTitle span{
-  padding-right:10px;
-}
-
-.spreadSheetTitle a{
-  font-weight: normal;
-  padding: 0 12px;
-}
-.spreadSheetTitle a:hover, .spreadSheetTitle a:focus, .spreadSheetTitle a:active{
-  text-decoration:none;
-}
-.spreadSheetGroup .groupTotal{
-  text-align:right;
-}
-
-
-
-table.style1 tr td:first-child{
-  font-weight:bold;
-  white-space:nowrap;
-  text-align:right;
-}
-table.style1 tr td:last-child{
-  border-bottom:1px solid #000;
-}
-
-
-
-table.proposedWork td,
-table.proposedWork th,
-table.exclusions td,
-table.exclusions th{
-  border:1px solid #000;
-}
-table.proposedWork thead th, table.exclusions thead th{
-  font-weight:bold;
-}
-table.proposedWork td,
-table.proposedWork th:first-child,
-table.exclusions th, table.exclusions td{
-  text-align:left;
-  vertical-align:top;
-}
-table.proposedWork td.description{
-  width:80%;
-}
-
-table.proposedWork td.amountColumn, table.proposedWork th.amountColumn,
-table.proposedWork td:last-child, table.proposedWork th:last-child{
-  text-align:center;
-  vertical-align:top;
-  white-space:nowrap;
-}
-
-.amount:before, .total:before{
-  content: "$";
-}
-table.proposedWork tfoot td:first-child{
-  border:none;
-  text-align:right;
-}
-table.proposedWork tfoot tr:last-child td{
-  font-size:16px;
-  font-weight:bold;
-}
-
-table.style1 tr td:last-child{
-  width:100%;
-}
-table.style1 td:last-child{
-  text-align:left;
-}
-td.tdDelete{
-  width:1%;
-}
-
-table.coResponse td{text-align:left}
-table.shipToFrom td, table.shipToFrom th{text-align:left}
-
-.docEdit{border:0 !important}
-
-.tableBorder td, .tableBorder th{
-  border:1px solid #000;
-}
-.tableBorder th, .tableBorder td{text-align:center}
-
-table.proposedWork td, table.proposedWork th{text-align:center}
-table.proposedWork td.description{text-align:left}
-    </style>
+    <title>Invoice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body>
-    <div class="document active">
-        <div class="spreadSheetGroup">
-      
-          
-          <table class="shipToFrom">
-            <thead style="font-weight:bold">
-              <tr>
-                <th>TO</th>
-                <th>SHIP TO</th>
-              </tr>
+    <div>
+        <h5>
+            {{$record->nomor_po}}
+        </h5>
+    </div>
+    <div class="overflow-x-auto relative">
+        <table class="px-6 w-full text-xs text-left text-grblack rtl:text-right dark:text-gray-400">
+            <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 font dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-2">
+                        Nama Barang
+                    </th>
+                    <th scope="col" class="px-6 py-2">
+                        Quantity
+                    </th>
+                    <th scope="col" class="px-6 py-2">
+                        Satuan
+                    </th>
+                    <th scope="col" class="px-6 py-2">
+                        Harga
+                    </th>
+                    <th scope="col" class="px-6 py-2">
+                        Discount
+                    </th>
+                    <th scope="col" class="px-6 py-2">
+                        Subtotal
+                    </th>
+                </tr>
             </thead>
             <tbody>
-              <tr>
-                <td contenteditable="true" style="width:50%">
-                  
-                </td>
-                <td contenteditable="true" style="width:50%">
-      Apollo Painting & Wallcovering<br/>
-      ATTN: <br/>
-      535 N. Eucalyptus Ave.<br/>
-      Inglewood, CA 90302<br/>
-      Phone (310)672-3080
-                </td>
-              </tr>
+                @foreach ($record->items as $item)
+    
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                    <th scope="row" class="px-6 py-1 font-medium whitespace-nowrap dark:text-white">
+                        {{ $item->produk->nama }}
+                    </th>
+                    <td class="px-6 py-1 text-center">
+                        {{ $item->quantity }}
+                    </td>
+                    <td class="px-6 py-1">
+                        {{ $item->satuan->nama }}
+                    </td>
+                    <td class="px-6 py-1">
+                        {{ 'Rp. '.number_format($item->price,0,'.',',')}}
+                    </td>
+                    <td class="px-6 py-1">
+                        {{ 'Rp. '.number_format($item->discount,0,'.',',')}}
+                    </td>
+                    <td class="px-6 py-1 text-bold">
+                        {{ 'Rp. '.number_format($item->subtotal,0,'.',',')}}
+                    </td>
+                </tr>
+                @endforeach
             </tbody>
-          </table>
-      
-          <hr style="visibility:hidden"/>
-          
-          
-          <table class="tableBorder">
-            <thead style="font-weight:bold">
-              <tr>
-                <th>SHIPPING METHOD</th>
-                <th>SPECIFIED BY</th>
-                <th>SIDEMARK</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td contenteditable="true" style="width:33.3%"></td>
-                <td contenteditable="true" style="width:33.3%"></td>
-                <td contenteditable="true" style="width:33.3%"></td>
-              </tr>
-            </tbody>
-          </table>
-          
-          
-          
-          <table class="proposedWork" width="100%" style="margin-top:20px border:1p">
-            <thead>
-              <th>QTY</th>
-              <th>UNIT</th>
-              <th>DESCRIPTION</th>
-              <th>COST</th>
-              <th class="amountColumn">TOTAL</th>
-            </thead>
-            <tbody>
-              <tr>
-                <td contenteditable="true">1</td>
-                <td class="unit" contenteditable="true"></td>
-                <td contenteditable="true" class="description"></td>
-                <td class="amount" contenteditable="true">0</td>
-                <td class="amount amountColumn rowTotal" contenteditable="true">0</td>
-                <td class="docEdit tdDelete">X</td>
-              </tr>
-            </tbody>
-            <tfoot>
-              <tr>
-                <td style="border:none"></td>
-                <td style="border:none"></td>
-                <td style="border:none"></td>
-              <td style="border:none;text-align:right">SUBTOTAL:</td>
-              <td class="amount subtotal">0.00</td>
-              <td class="docEdit"></td>
-              </tr>
-              <tr>
-                <td style="border:none"></td>
-                <td style="border:none"></td>
-                <td style="border:none"></td>
-              <td style="border:none;text-align:right">SALES TAX:</td>
-              <td class="amount" contenteditable="true">0.00</td>
-              <td class="docEdit"></td>
-              </tr>
-              <tr>
-                <td style="border:none"></td>
-                <td style="border:none"></td>
-                <td style="border:none"></td>
-              <td style="border:none;text-align:right;white-space:nowrap">SHIPPING & HANDLING:</td>
-              <td class="amount" contenteditable="true">0.00</td>
-              <td class="docEdit"></td>
-              </tr>
-              <tr>
-                <td style="border:none"></td>
-                <td style="border:none"></td>
-                <td style="border:none"></td>
-              <td style="border:none;text-align:right">TOTAL:</td>
-              <td class="total amount" contenteditable="true"">0.00</td>
-              <td class="docEdit"></td>
-              </tr>
-            </tfoot>
-          </table>
-      
-          
-          
-          <table width="100%">
-            <tbody>
-              <tr>
-                <td style="50%" style="vertical-align:top">
-                  <table style="width:100%">
-                    <tbody>
-                      <tr>
-                        <td style="text-align:left">
-                        <p>1. Please send two copies of your invoice.</p>
-      <p>2. Enter this order in accordance with the prices, terms, delivery method, and specifications listed above.</p>
-      <p>3. Please notify us immediately if you are unable to ship as specified.</p>
-      <p>4. Send all correspondence to:</p>
-      <p style="padding-left:20px">Apollo Painting & Wallcovering
-        <br/>
-      535 N. Eucalyptus Ave.
-        <br/>
-      Inglewood, CA 90302
-        <br/>
-      Phone (714)326-3025
-                        </p>
+        </table>
+    </div>
+       
+   
+    
+    <div class="flex">
+        <div class="flex-1 px-2 py-2 w-2/3">
+            <table class="overflow-x-auto">
+                <tbody><tr>Catatan : </tr>
+                    <tr class="text-xs text-justify">
+                        <td>{!!html_entity_decode($record->note)!!}
                         </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-                <td style="padding-left:40px; width:50%; vertical-align:top">
-                  <table style="width:100%">
-                    <tbody>
-                      <tr>
-                        <td style="text-align:left">
-                          <strong>COMMENTS:</strong>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td contenteditable="true" style="text-align:left;border: 1px solid #000">Please ship all goods to our office using our UPS account #1234</td>
-                      </tr>
-                      <tr>
-                        <td style="padding-top:60px">
-                          Authorized by: _____________________________ Date: __________
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-      
-        
-      
+                    </tr>
+                </tbody>
+            </table>
         </div>
-      </div>
+        <div class="flex-1 w-1/3 max-w-md" >
+            
+    
+    
+    
+    <div class="overflow-x-auto relative">
+        <table class="w-full text-sm text-left text-black rtl:text-right dark:text-gray-400">
+            
+            <tbody>
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <th scope="row" class="px-2 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        Total Untaxed
+                    </th>
+                    <td class="px-2 py-1">
+                        Rp. {{number_format($record->total_po,0,'.','.')}}
+                    </td>
+                 
+                    
+                </tr>
+                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <th scope="row" class="px-2 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        PPN 
+                    </th>
+                    <td class="px-2 py-1">
+                        Rp. {{number_format($record->ppn,0,'.','.')}}
+                    </td>
+                   
+                  
+                </tr>
+                <tr class="bg-white border-b dark:bg-gray-800">
+                    <th scope="row" class="px-2 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        Diskon
+                    </th>
+                    <td class="px-2 py-1">
+                        Rp. {{number_format($record->diskon,0,'.','.')}}
+                    </td>
+                </tr>
+                <tr class="bg-white border-b dark:bg-gray-800">
+                    <th scope="row" class="px-2 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        Biaya Pengiriman
+                    </th>
+                    <td class="px-2 py-1">
+                        Rp. {{number_format($record->biaya_kirim,0,'.','.')}}
+                    </td>
+                </tr>
+                <tr class="bg-white border-b dark:bg-gray-800">
+                    <th scope="row" class="px-2 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        Total Bayar
+                    </th>
+                    <td class="px-2 py-2">
+                        Rp. {{number_format($record->total_bayar,0,'.','.')}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    
+    
     
 </body>
 </html>
