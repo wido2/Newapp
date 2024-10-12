@@ -30,6 +30,8 @@ use Filament\Infolists\Components\Actions\Action;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry\TextEntrySize;
 use App\Filament\Clusters\Purchase\Resources\PurchaseOrderResource;
+use Knp\Snappy\Pdf;
+
 class infoPO extends ViewRecord
 {
     protected static string $resource = PurchaseOrderResource::class;
@@ -107,8 +109,12 @@ class infoPO extends ViewRecord
         return 'Purchase Order #'.$this->record->nomor_po;
     }
     private function downloadPDF(Model $record)
-    {
-       return pdf()>view('purchase',['record'=>$record]);
+    {   $snappy = new Pdf('/usr/bin/wkhtmltopdf');
+        $snappy->setBinary('/usr/bin/wkhtmltopdf');
+        $pdf = App::make('snappy.pdf.wrapper');
+        $pdf->loadView('purchase', compact('record'));
+        return $pdf->download('Purchase Order #'.$record->nomor_po.'.pdf');
+
     }
     
     public function infolist(Infolist $infolist): Infolist

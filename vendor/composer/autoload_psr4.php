@@ -126,7 +126,6 @@ return array(
     'Brick\\Math\\' => array($vendorDir . '/brick/math/src'),
     'BladeUI\\Icons\\' => array($vendorDir . '/blade-ui-kit/blade-icons/src'),
     'BladeUI\\Heroicons\\' => array($vendorDir . '/blade-ui-kit/blade-heroicons/src'),
-    'Barryvdh\\Snappy\\' => array($vendorDir . '/barryvdh/laravel-snappy/src'),
     'Awcodes\\TableRepeater\\' => array($vendorDir . '/awcodes/filament-table-repeater/src'),
     'Ariaieboy\\FilamentCurrency\\Database\\Factories\\' => array($vendorDir . '/ariaieboy/filament-currency/database/factories'),
     'Ariaieboy\\FilamentCurrency\\' => array($vendorDir . '/ariaieboy/filament-currency/src'),

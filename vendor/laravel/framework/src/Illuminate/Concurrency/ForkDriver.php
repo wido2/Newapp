@@ -3,11 +3,14 @@
 namespace Illuminate\Concurrency;
 
 use Closure;
-use Illuminate\Foundation\Defer\DeferredCallback;
+use Illuminate\Contracts\Concurrency\Driver;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Defer\DeferredCallback;
 use Spatie\Fork\Fork;
 
-class ForkDriver
+use function Illuminate\Support\defer;
+
+class ForkDriver implements Driver
 {
     /**
      * Run the given tasks concurrently and return an array containing the results.
