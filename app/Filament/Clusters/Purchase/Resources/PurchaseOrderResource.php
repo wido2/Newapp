@@ -2,24 +2,28 @@
 
 namespace App\Filament\Clusters\Purchase\Resources;
 
+use Carbon\Carbon;
 use Filament\Forms;
 use Filament\Tables;
+use App\Models\Setting;
 use Filament\Forms\Form;
+use Filament\Pages\Page;
 use Filament\Tables\Table;
 use App\Models\PurchaseOrder;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Resources\Resource;
 use App\Filament\Clusters\Purchase;
+use Filament\Tables\Actions\Action;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Pages\SubNavigationPosition;
+use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
+use Symfony\Component\HttpFoundation\Response;
+use App\Http\Controllers\PurchaseOrderController;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Clusters\Purchase\Resources\PurchaseOrderResource\Pages;
 use App\Filament\Clusters\Purchase\Resources\PurchaseOrderResource\Pages\infoPO;
 use App\Filament\Clusters\Purchase\Resources\PurchaseOrderResource\RelationManagers;
-use App\Http\Controllers\PurchaseOrderController;
-use Carbon\Carbon;
-use Filament\Pages\Page;
-use Filament\Tables\Filters\SelectFilter;
-use Illuminate\Database\Eloquent\Model;
 
 class PurchaseOrderResource extends Resource
 {
@@ -59,6 +63,14 @@ class PurchaseOrderResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Action::make('print')
+                ->icon('fas-print')
+                ->action(
+                          function(Model $record){
+                            return PurchaseOrderController::downloadPDF($record);
+                          }
+
+                )
             ])
             ->defaultSort('created_at','desc')
             ->bulkActions([
@@ -67,7 +79,7 @@ class PurchaseOrderResource extends Resource
                 ]),
             ]);
     }
-
+    
     public static function getRelations(): array
     {
         return [

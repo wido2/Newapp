@@ -1,137 +1,89 @@
-<html lang="en">
+<html>
 <head>
-    <title>Invoice</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'inter', sans-serif;
+    }
+  </style>
 </head>
-<body>
-    <div>
-        <h5>
-            {{$record->nomor_po}}
-        </h5>
+<body class="p-8">
+  <div class="p-6 mx-auto max-w-4xl border border-gray-300">
+    <div class="flex justify-between mb-8">
+      <div>
+        <h1 class="text-lg font-bold">MY STORE LTD</h1>
+        <p>My Store St<br>Los Angeles, CA, 90210<br>United States</p>
+      </div>
+      <div class="text-right">
+        <p><span class="font-bold">PURCHASE ORDER #</span> 205</p>
+        <p><span class="font-bold">PURCHASE ORDER DATE</span> 2021-10-21</p>
+      </div>
     </div>
-    <div class="overflow-x-auto relative">
-        <table class="px-6 w-full text-xs text-left text-grblack rtl:text-right dark:text-gray-400">
-            <thead class="text-xs font-medium text-gray-700 uppercase bg-gray-50 font dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                    <th scope="col" class="px-6 py-2">
-                        Nama Barang
-                    </th>
-                    <th scope="col" class="px-6 py-2">
-                        Quantity
-                    </th>
-                    <th scope="col" class="px-6 py-2">
-                        Satuan
-                    </th>
-                    <th scope="col" class="px-6 py-2">
-                        Harga
-                    </th>
-                    <th scope="col" class="px-6 py-2">
-                        Discount
-                    </th>
-                    <th scope="col" class="px-6 py-2">
-                        Subtotal
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($record->items as $item)
-    
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                    <th scope="row" class="px-6 py-1 font-medium whitespace-nowrap dark:text-white">
-                        {{ $item->produk->nama }}
-                    </th>
-                    <td class="px-6 py-1 text-center">
-                        {{ $item->quantity }}
-                    </td>
-                    <td class="px-6 py-1">
-                        {{ $item->satuan->nama }}
-                    </td>
-                    <td class="px-6 py-1">
-                        {{ 'Rp. '.number_format($item->price,0,'.',',')}}
-                    </td>
-                    <td class="px-6 py-1">
-                        {{ 'Rp. '.number_format($item->discount,0,'.',',')}}
-                    </td>
-                    <td class="px-6 py-1 text-bold">
-                        {{ 'Rp. '.number_format($item->subtotal,0,'.',',')}}
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+    <div class="flex justify-between mb-8">
+      <div>
+        <p class="font-bold">VENDOR:</p>
+        <p>Great Supplier<br>Great Supplier St<br>New York, NY, 10109<br>United States</p>
+      </div>
+      <div class="text-right">
+        <p class="font-bold">SHIP TO:</p>
+        <p>My Store Ltd<br>My Store St<br>Los Angeles, CA, 90210<br>United States</p>
+      </div>
     </div>
-       
-   
-    
-    <div class="flex">
-        <div class="flex-1 px-2 py-2 w-2/3">
-            <table class="overflow-x-auto">
-                <tbody><tr>Catatan : </tr>
-                    <tr class="text-xs text-justify">
-                        <td>{!!html_entity_decode($record->note)!!}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        <div class="flex-1 w-1/3 max-w-md" >
-            
-    
-    
-    
-    <div class="overflow-x-auto relative">
-        <table class="w-full text-sm text-left text-black rtl:text-right dark:text-gray-400">
-            
-            <tbody>
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <th scope="row" class="px-2 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        Total Untaxed
-                    </th>
-                    <td class="px-2 py-1">
-                        Rp. {{number_format($record->total_po,0,'.','.')}}
-                    </td>
-                 
-                    
-                </tr>
-                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <th scope="row" class="px-2 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        PPN 
-                    </th>
-                    <td class="px-2 py-1">
-                        Rp. {{number_format($record->ppn,0,'.','.')}}
-                    </td>
-                   
-                  
-                </tr>
-                <tr class="bg-white border-b dark:bg-gray-800">
-                    <th scope="row" class="px-2 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        Diskon
-                    </th>
-                    <td class="px-2 py-1">
-                        Rp. {{number_format($record->diskon,0,'.','.')}}
-                    </td>
-                </tr>
-                <tr class="bg-white border-b dark:bg-gray-800">
-                    <th scope="row" class="px-2 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        Biaya Pengiriman
-                    </th>
-                    <td class="px-2 py-1">
-                        Rp. {{number_format($record->biaya_kirim,0,'.','.')}}
-                    </td>
-                </tr>
-                <tr class="bg-white border-b dark:bg-gray-800">
-                    <th scope="row" class="px-2 py-1 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                        Total Bayar
-                    </th>
-                    <td class="px-2 py-2">
-                        Rp. {{number_format($record->total_bayar,0,'.','.')}}
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <table class="mb-8 w-full">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="p-2 text-left">Delivery date</th>
+          <th class="p-2 text-left">Shipping method</th>
+          <th class="p-2 text-left">Shipping terms</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="p-2">2021-11-01</td>
+          <td class="p-2">FedEx</td>
+          <td class="p-2">Tracked shipment.</td>
+        </tr>
+      </tbody>
+    </table>
+    <table class="mb-8 w-full">
+      <thead>
+        <tr class="bg-gray-200">
+          <th class="p-2 text-left">Item</th>
+          <th class="p-2 text-left">Description</th>
+          <th class="p-2 text-left">Quantity</th>
+          <th class="p-2 text-left">Unit Cost</th>
+          <th class="p-2 text-left">Line Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="p-2">59247</td>
+          <td class="p-2">Women's Blue T-Shirts Size 10</td>
+          <td class="p-2">50.0</td>
+          <td class="p-2">$5.00</td>
+          <td class="p-2">$250.00</td>
+        </tr>
+        <tr>
+          <td class="p-2">59276</td>
+          <td class="p-2">Women's Blue T-Shirts Size 12</td>
+          <td class="p-2">50.0</td>
+          <td class="p-2">$5.00</td>
+          <td class="p-2">$250.00</td>
+        </tr>
+        <tr>
+          <td class="p-2">59273</td>
+          <td class="p-2">Women's Blue Hoodie Size 10</td>
+          <td class="p-2">50.0</td>
+          <td class="p-2">$10.00</td>
+          <td class="p-2">$500.00</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="text-right">
+      <p class="mb-2"><span class="font-bold">SUBTOTAL</span> $1,000.00</p>
+      <p class="mb-2"><span class="font-bold">TAX (0.0013%)</span> $0.01</p>
+      <p class="text-lg font-bold">TOTAL $1,000.01</p>
     </div>
-    
-    
-    
+  </div>
 </body>
 </html>

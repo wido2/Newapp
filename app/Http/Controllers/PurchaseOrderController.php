@@ -7,14 +7,15 @@ use App\Models\Pajak;
 use App\Models\Kontak;
 use App\Models\Produk;
 use App\Models\Vendor;
+use App\Models\Setting;
 use Filament\Forms\Get;
 use Filament\Forms\Set;
 use App\Models\HargaBarang;
 use Illuminate\Http\Request;
 use App\Models\PurchaseOrder;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Awcodes\TableRepeater\Header;
 
+use Awcodes\TableRepeater\Header;
 use Illuminate\Support\HtmlString;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
@@ -23,6 +24,7 @@ use Filament\Support\Enums\Alignment;
 use Filament\Forms\Components\Section;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
+use Illuminate\Database\Eloquent\Model;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\RichEditor;
@@ -32,13 +34,27 @@ use Illuminate\Database\Eloquent\Builder;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\MarkdownEditor;
 use App\Http\Controllers\PaymetTermController;
+use Symfony\Component\HttpFoundation\Response;
 use Awcodes\TableRepeater\Components\TableRepeater;
 use Pelmered\FilamentMoneyField\Tables\Columns\MoneyColumn;
 use Pelmered\FilamentMoneyField\Forms\Components\MoneyInput;
 
 class PurchaseOrderController extends Controller
 {
-    
+    public static function downloadPDF(Model $record): Response
+    {   
+        $setting=Setting::find(1);
+        // $options->set('isRemoteEnabled', true);
+        // $options->set('isJavascriptEnabled', TRUE);
+        $pdf = Pdf::loadView('purchase2',['record'=>$record,'setting'=>$setting],
+        )->setPaper('A4')->setOption(['isRemoteEnabled'=> true, 'isJavascriptEnabled'=>true]);
+    //return $pdf->download('aaa.pdf');
+    return response()->streamDownload(function () use ($pdf) {
+        echo $pdf->stream();
+    }, str_replace('/','_',$record->nomor_po).'.pdf');
+    }
+
+
     static function formPO():array{
         return [
             Wizard::make([
@@ -114,6 +130,7 @@ class PurchaseOrderController extends Controller
                         ->label('Tanggal Pengiriman'),
                         TextInput::make('biaya_kirim')
                         ->numeric()
+                        ->default(0)
                         ->hidden(fn (Get $get):bool=>!$get('vendor_id'))
                         ->prefix('Rp.')
                         ->currencyMask(',','.')

@@ -2,19 +2,21 @@
 
 namespace App\Filament\Clusters\Purchase\Resources\PurchaseOrderResource\Pages;
 
+use Dompdf\Options;
 use Filament\Actions;
 use function Livewire\wrap;
 use Illuminate\Support\Str;
 use App\Models\PurchaseOrder;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Filament\Actions\EditAction;
 use Filament\Infolists\Infolist;
 use Filament\Actions\ActionGroup;
 use Illuminate\Support\HtmlString;
 use App\Filament\Clusters\Purchase;
 use Illuminate\Contracts\View\View;
+
 use Illuminate\Support\Facades\App;
 use Filament\Support\Enums\FontWeight;
-
 use Illuminate\Database\Eloquent\Model;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Forms\Components\DatePicker;
@@ -30,7 +32,7 @@ use Filament\Infolists\Components\Actions\Action;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry\TextEntrySize;
 use App\Filament\Clusters\Purchase\Resources\PurchaseOrderResource;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Setting;
 
 class infoPO extends ViewRecord
 {
@@ -62,7 +64,7 @@ class infoPO extends ViewRecord
                 ->color('danger')
                 ->action(
                     function (Model $record) {
-                        return $this->downloadPDF($record);
+                        return PurchaseOrderController::downloadPDF($record);
                     }
                 )
                 // ->requiresConfirmation()
@@ -108,10 +110,17 @@ class infoPO extends ViewRecord
     {
         return 'Purchase Order #'.$this->record->nomor_po;
     }
-    private function downloadPDF(Model $record)
+    private function downloadPDF(Model $record): Response
     {   
-        $pdf=Pdf::loadView('purchase',compact('record'));
-        $pdf->save('po.pdf','');
+        $setting=Setting::find(1);
+        // $options->set('isRemoteEnabled', true);
+        // $options->set('isJavascriptEnabled', TRUE);
+        $pdf = Pdf::loadView('purchase2',['record'=>$record,'setting'=>$setting],
+        )->setPaper('A4')->setOption(['isRemoteEnabled'=> true, 'isJavascriptEnabled'=>true]);
+    //return $pdf->download('aaa.pdf');
+    return response()->streamDownload(function () use ($pdf) {
+        echo $pdf->stream();
+    }, 'aaa.pdf');
     }
     
     public function infolist(Infolist $infolist): Infolist
