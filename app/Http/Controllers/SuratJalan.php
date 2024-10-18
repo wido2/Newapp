@@ -54,9 +54,10 @@ class SuratJalan extends Controller
                     ->columns(3)
                     ->schema([
                         TextInput::make('nomor_surat_jalan')
-                            ->required()
+                            // ->required() 
+                            ->helperText('terisi otomatis jika berhasil di simpan')
                             ->readOnly()
-                            ->default(NomorSuratJalan::generate(ModelsSuratJalan::count() + 1))
+                            // ->default(NomorSuratJalan::generate(ModelsSuratJalan::count() + 1))
                             ->label('Nomor Surat Jalan'),
                         DatePicker::make('tanggal_pengiriman')->label('Tanggal Pengiriman')->required()->default(now())->format('Y-m-d')->native(false),
                         Select::make('user_id')
