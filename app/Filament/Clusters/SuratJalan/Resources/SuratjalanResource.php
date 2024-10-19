@@ -8,6 +8,7 @@ use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use App\Filament\Clusters\SuratJalan;
+use App\Filament\Clusters\SuratJalan\Resources\SuratjalanResource\infoSuratJalan;
 use Filament\Pages\SubNavigationPosition;
 use Illuminate\Database\Eloquent\Builder;
 use App\Models\SuratJalan as newSuratjalan;
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Http\Controllers\SuratJalan as ControllersSuratJalan;
 use App\Filament\Clusters\SuratJalan\Resources\SuratjalanResource\Pages;
 use App\Filament\Clusters\SuratJalan\Resources\SuratjalanResource\RelationManagers;
+use Illuminate\Database\Eloquent\Model;
 
 class SuratjalanResource extends Resource
 {
@@ -41,6 +43,7 @@ class SuratjalanResource extends Resource
     public static function table(Table $table): Table
     {
         return $table
+            ->recordUrl(fn (Model $record):string=>infoSuratJalan::getUrl([$record->id]))
             ->columns(
                 ControllersSuratJalan::getTableSuratJalan()
             )
@@ -68,6 +71,7 @@ class SuratjalanResource extends Resource
     {
         return [
             'index' => Pages\ListSuratjalans::route('/'),
+            'view'=>infoSuratJalan::route('/{record}'),
             'create' => Pages\CreateSuratjalan::route('/create'),
             'edit' => Pages\EditSuratjalan::route('/{record}/edit'),
         ];

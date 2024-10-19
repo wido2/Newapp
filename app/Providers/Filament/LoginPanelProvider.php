@@ -2,7 +2,6 @@
 
 namespace App\Providers\Filament;
 
-use EightyNine\Reports\ReportsPlugin;
 use Filament\FontProviders\GoogleFontProvider;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
